@@ -1,0 +1,103 @@
+$primary : #2A2559;
+$secondary: #F10895;
+$dark :#DE3163;
+$success: #06CB4E;
+$danger: #F44B62;
+$warning: #FFBF00;
+$info: #2054F7;
+$orange:orange;
+.btn-primary {
+    background: #3A78CA;
+}
+.primary-bg{
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.texr-orange{
+    color: orange !important;
+}
+.vw-90{
+    width: 90vw;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+.vw-80{
+    width: 80vw;
+}
+.vw-95 {
+    width: 95vw
+}
+.vh-10 {
+    height: 10vh;
+}
+.vh-85{
+    height: 85vh;
+}
+.pt-10vh {
+    padding-top: 10vh;
+}
+.w-60{
+    width: 60%;
+}
+.w-40{
+    width: 40%;
+}
+.pointer{
+    cursor: pointer;
+}
+.jr-card{
+    min-height: 80px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 3px rgb(128 128 128 / 30%);
+    padding: 20px;
+    margin: 15px 0;
+    background-color: white;
+   
+}
+
+.fs-15{
+    font-size: 15px !important;
+}
+.bold{
+    font-weight: bold !important;
+}
+
+// Light Theme 
+.bg-light{
+    background-color: white;
+}
+.bg-dark{
+    background-color: black !important;
+}
+.light-primary{
+    color: #050B6B;
+}
+.bg-light-primary{
+    background-color: #050B6B;
+}
+.light-secondary{
+    color: #F10895;
+}
+.bg-light-secondary{
+    background-color: #F10895;
+}
+
+
+// Dark Theme
+
+.dark-primary{
+    color: #2D91F6;
+}
+.bg-light-primary{
+    background-color: #2D91F6;
+}
+.dark-secondary{
+    color: #1F262E;
+}
+.bg-dark-secondary{
+    background-color: #1F262E;
+}
+
+//this is for customize boosttrab class name
+@import "../node_modules/bootstrap/scss/bootstrap.scss";

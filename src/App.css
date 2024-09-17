@@ -1,0 +1,63 @@
+
+.sideNav{
+  top: 0;
+  width :220px;
+  transition: all 0.7s;
+  height: 100vh;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  z-index: 100;
+  overflow-y: scroll;
+}
+.overall-content{
+  margin-left: 60px;
+}
+
+.iconDiv{
+  display: flex;
+  height :50px;
+  align-items: center;
+  padding: 0 8px;
+  margin: 0 8px;
+}
+.iconDiv .icon{
+  font-size: 22px;
+ 
+}
+.iconDiv:hover{
+  background-color: #c1c5c975;
+  border-radius: 10px;
+}
+.iconDiv:hover .icon{
+  color: white !important;
+  transition: all 0.7s; 
+}
+.sideNav:hover  .iconDiv .icon{
+  font-size: 22px;
+transition: all 0.5s; 
+}
+.show{
+  opacity: 100%;
+  transition: all 0.7s;
+}
+.sideNav:hover .show{
+  opacity: 100%;
+  transition: all 0.7s;
+}
+.login-input{
+  text-indent: 10px;
+}
+.login-input:focus { 
+  outline: none !important;
+  border-color: #719ECE;
+  box-shadow: 0 0 10px #719ECE;
+}
+.selected{
+
+  border-left: solid 6px;
+  border-color: white;
+  border-radius: 5px;
+}
+.child-route-selected{
+  color: red !important;
+}

@@ -1,0 +1,43 @@
+.app-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 230px; /* Set the width of the sidebar */
+    height: 100vh; /* Set full height */
+    position: fixed; /* Fixed Sidebar */
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    overflow-y: auto; /* Enable vertical scrollbar */
+    padding-top: 30px;
+    z-index: 100;
+  }
+
+  
+  .main-content {
+    flex: 1; /* Fill remaining space */
+    padding: 20px; /* Add padding to the main content */
+    margin-left: 230px; /* Set the margin to accommodate the width of the sidebar */
+    overflow-x: hidden;
+  }
+  
+
+/* Style the scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 7px; /* Width of the scrollbar */
+  }
+  
+  /* Track */
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent; /* Transparent track */
+  }
+  
+  /* Handle */
+  .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(218, 218, 218, 0.74); /* Transparent scrollbar handle */
+    border-radius: 15px;
+  }
+  
+  /* Handle on hover */
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background: transparent; /* Transparent scrollbar handle on hover */
+  }
