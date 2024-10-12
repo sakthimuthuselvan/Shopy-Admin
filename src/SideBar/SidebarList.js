@@ -98,18 +98,8 @@ const SideBarList =[
       "icon": <PersonIcon className="text-white icon"/>
     },
     {
-      "name":"User",
-      "path":"/",
-      "icon": <PersonIcon className="text-white icon"/>
-    },
-    {
-      "name":"User",
-      "path":"/",
-      "icon": <PersonIcon className="text-white icon"/>
-    },
-    {
-      "name":"User",
-      "path":"/",
+      "name":"Theming",
+      "path":"/theming",
       "icon": <PersonIcon className="text-white icon"/>
     },
     {

@@ -129,6 +129,7 @@ const CardImage: React.FC = () => {
       console.log(error.error_response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -174,6 +175,7 @@ const CardImage: React.FC = () => {
       console.log(error.error_response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -311,6 +313,7 @@ const CardImage: React.FC = () => {
       console.log(error.response_message);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -412,6 +415,7 @@ const CardImage: React.FC = () => {
       console.log(error.error_response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -443,6 +447,7 @@ const CardImage: React.FC = () => {
     } catch (error) {
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -475,6 +480,7 @@ const CardImage: React.FC = () => {
     } catch (error) {
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -507,6 +513,7 @@ const CardImage: React.FC = () => {
       console.log(error);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
