@@ -143,7 +143,6 @@ function Index() {
     <div className='nav'>
       <div className={`full-nav bg-primary letter-primary`}>
         <div className='nav-content mx-3'>
-          <h1 className='text-white' onClick={() => homeBtnClick()}>{companyName}</h1>
           <div className='box3'>
             {size === "sm" ?
               <div>

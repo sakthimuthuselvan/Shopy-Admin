@@ -19,32 +19,6 @@ function App() {
   const globalState = useSelector((state) => state);
   const isAuth = !!localStorage.getItem("_Auth")
 
-  const timeoutRef = useRef(null);
-
-  const handleResize = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    
-    timeoutRef.current = setTimeout(() => {
-      // Your API call here
-      console.log('API call on resize');
-    }, 500); // Adjust the delay (500ms) as needed
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-
   return (
     <div>
 
@@ -52,7 +26,7 @@ function App() {
         {isAuth ?
 
           <div>
-            {size !== "lg" ?
+            {size === "sm" ?
               <>
                 <NavBar2 />
 

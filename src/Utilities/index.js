@@ -1,35 +1,32 @@
-import  { useEffect, useState } from 'react'
+import { useMediaQuery } from '@mui/material';
 
 export default function WindowWidth() {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-    useEffect(() => {
-        // Update the window width whenever the window is resized
-        const handleResize = () => {
-          setWindowWidth(window.innerWidth);
-        };
-    
-        window.addEventListener('resize', handleResize);
-    
-        // Clean up the event listener when the component unmounts
-        return () => {
-          window.removeEventListener('resize', handleResize);
-        };
-      }, []);
+  // MUI's breakpoints (xs, sm, md, lg, xl) are used for responsiveness
+  const isXs = useMediaQuery('(max-width:576px)');
+  const isSm = useMediaQuery('(min-width:577px) and (max-width:992px)');
+  const isMd = useMediaQuery('(min-width:993px) and (max-width:1200px)');
+  const isLg = useMediaQuery('(min-width:1201px)');
 
 
-      
+  // let screenSize = 'xs'; // Default to extra small
+
+  // if (windowWidth <= 576) {
+  //   screenSize = 'sm';
+  // }else if (windowWidth >= 577 && windowWidth <= 992) {
+  //   screenSize = 'md';
+  // }else if (windowWidth >= 993) {
+  //   screenSize = 'lg';
+  // }
 
   let screenSize = 'xs'; // Default to extra small
 
-  if (windowWidth <= 576) {
+  if (isXs || isSm) {
     screenSize = 'sm';
-  }else if (windowWidth >= 577 && windowWidth <= 992) {
+  } else if (isMd) {
     screenSize = 'md';
-  }else if (windowWidth >= 993) {
+  } else if (isLg) {
     screenSize = 'lg';
   }
 
-  return screenSize
+  return screenSize;
 }
-
