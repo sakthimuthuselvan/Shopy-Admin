@@ -91,7 +91,7 @@ const CardImage: React.FC = () => {
   })
   const [checkAPiCall, setCheckApiCall] = useState(false)
 
-  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr, navigatePath, navigatePathErr, imageVal, isCheck, imageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, baseUrl, imageViewDialog,categoryVal,categoryValErr,categoryList } = state;
+  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr, navigatePath, navigatePathErr, imageVal, isCheck, imageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, baseUrl, imageViewDialog, categoryVal, categoryValErr, categoryList } = state;
 
 
   useEffect(() => {
@@ -158,7 +158,7 @@ const CardImage: React.FC = () => {
   const frameTableFun = (data: any): void => {
     // parentCategory,catgoryImage,childCategoryName,description,action
     const frameColumnData = data.map((item: any): any => {
-let finded: any = categoryList.find((data)=> data._id === item.navigate_category)
+      let finded: any = categoryList.find((data) => data._id === item.navigate_category)
       let obj: any = {
         catgoryImage: <img src={item.image} alt='ad_image_card' width={80} height={80} />,
         navigatePath: finded && finded.name ? finded.name : "-",
@@ -205,21 +205,22 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
       navigatePathErr: false,
       imgInputErr: false,
       submitDisable: false,
+      categoryVal: null
     }))
   }
 
   const handleFileChange = (event: any): void => {
     const selectedFile = event.target.files[0]
     // Handle the selected file as needed
-   
-      setState((pre) => ({
-        ...pre,
-        imageVal: selectedFile,
-        imageValErr: false,
-        isCheck: true,
-        submitDisable: false
-      }))
-    }
+
+    setState((pre) => ({
+      ...pre,
+      imageVal: selectedFile,
+      imageValErr: false,
+      isCheck: true,
+      submitDisable: false
+    }))
+  }
 
   const handleChange = (e): void => {
     setState((pre) => ({
@@ -297,10 +298,15 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
     const method: string = "POST";
     const url: string = "single/image/upload";
     const data: any = formData
+    setState((pre) => ({
+      ...pre,
+      showLoader: true
+    }))
     try {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         uploadImgPath: response.imageUrl,
         openSnakbar: true,
         openSnakbarType: "success",
@@ -325,10 +331,15 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
       "image": uploadImgPath ? uploadImgPath : selectedItem.image,
       "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category
     }
+    setState((pre) => ({
+      ...pre,
+      showLoader: true
+    }))
     try {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openDialog: false,
         openSnakbar: true,
         openSnakbarType: "success",
@@ -353,10 +364,12 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
       "image": uploadImgPath,
       "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category
     }
+    setState((pre) => ({ ...pre, showLoader: true }))
     try {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "success",
         openSnakbarMsg: response.response_message ? response.response_message : "Something went wrong"
@@ -441,7 +454,7 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
               fullWidth
             /> */}
 
-<Autocomplete
+            <Autocomplete
               id='navigateInputFocus'
               ref={navigateInputFocus}
               disablePortal
@@ -496,7 +509,7 @@ let finded: any = categoryList.find((data)=> data._id === item.navigate_category
         fullWidth
       >
         <DialogTitle id="alert-dialog-title subtitle1">
-         <Typography>Confirm Delete</Typography>
+          <Typography>Confirm Delete</Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

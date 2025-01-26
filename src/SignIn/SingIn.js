@@ -13,6 +13,7 @@ import WindowWidth from "../Utilities/index"
 import Loader from '../Utilities/Loader/Loader';
 import { useDispatch } from 'react-redux';
 import MySnackbar from '../AlertShow/Alert';
+import { encrypt } from '../Utilities/Util';
 
 function SignIn() {
     const [state, setState] = useState({
@@ -86,8 +87,12 @@ function SignIn() {
             "email": email,
             "password": password
         }
+        const encrypted = {
+            data: encrypt(JSON.stringify(data))
+        }
+        console.log("encrypted ", encrypted);
 
-        const response = HttpRequest({ method, url, data });
+        const response = HttpRequest({ method, url, encrypted });
         response
             .then((res) => {
                 const isToken = res.data && res.data.token ? res.data.token : ""
@@ -148,7 +153,7 @@ function SignIn() {
                             <div className='text-center mt-4 mx-3'>
                                 <h2>LogIn</h2>
                                 <p>LogIn into the account</p>
-                                <form onSubmit={(e)=>{
+                                <form onSubmit={(e) => {
                                     e.preventDefault();
                                     submitFun()
                                 }}>

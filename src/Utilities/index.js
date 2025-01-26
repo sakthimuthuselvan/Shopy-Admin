@@ -8,16 +8,6 @@ export default function WindowWidth() {
   const isLg = useMediaQuery('(min-width:1201px)');
 
 
-  // let screenSize = 'xs'; // Default to extra small
-
-  // if (windowWidth <= 576) {
-  //   screenSize = 'sm';
-  // }else if (windowWidth >= 577 && windowWidth <= 992) {
-  //   screenSize = 'md';
-  // }else if (windowWidth >= 993) {
-  //   screenSize = 'lg';
-  // }
-
   let screenSize = 'xs'; // Default to extra small
 
   if (isXs || isSm) {

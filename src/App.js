@@ -30,7 +30,8 @@ function App() {
               <>
                 <NavBar2 />
 
-                <div className="container vh-100" style={{ backgroundColor: "#0306331c", marginTop: "12vh" }}>
+             <div  style={{ backgroundColor: "#0306331c", paddingTop: "12vh" }}>
+             <div className="container vh-100">
                   <Routes>
                     {
                       RouteList.map(({ path, component: Component }, index) => {
@@ -41,7 +42,9 @@ function App() {
                       })
                     }
                   </Routes>
-                </div></>
+                </div>
+             </div>
+             </>
               :
               <div className="app-container">
                 <div className="sidebar">
