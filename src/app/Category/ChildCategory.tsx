@@ -172,11 +172,13 @@ const ChildCategory: React.FC = () => {
       const response = await HttpRequest({ method, url, data});
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         parentCategoryData: response.response_data
       }))
     } catch (error) {
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -199,6 +201,7 @@ const ChildCategory: React.FC = () => {
       console.log(error.error_response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -262,6 +265,7 @@ const ChildCategory: React.FC = () => {
       console.log(response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "success",
         openSnakbarMsg: response.response_message,
@@ -393,6 +397,7 @@ const ChildCategory: React.FC = () => {
       console.log();
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         uploadImgPath: response.imageUrl,
         openSnakbar: true,
         openSnakbarType: "success",
@@ -402,6 +407,7 @@ const ChildCategory: React.FC = () => {
       console.log(error.error_response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -426,6 +432,7 @@ const ChildCategory: React.FC = () => {
       console.log(response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openDialog: false,
         openSnakbar: true,
         openSnakbarType: "success",
@@ -436,6 +443,7 @@ const ChildCategory: React.FC = () => {
       console.log(error);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -458,6 +466,7 @@ const ChildCategory: React.FC = () => {
       console.log(response);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "success",
         openSnakbarMsg: response.response_message ? response.response_message : "Something went wrong"
@@ -468,6 +477,7 @@ const ChildCategory: React.FC = () => {
       console.log(error);
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"

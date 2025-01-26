@@ -72,25 +72,6 @@ const ProductCom: React.FC = () => {
   const mutipleImgInput = useRef<HTMLInputElement>(null);
 
   const descriptionInput = useRef<HTMLInputElement>(null);
-
-  //   {
-  //     "_id": "6609b5a1695d26adb5f24116",
-  //     "parent_category_id": "65da0170dbb93ba9587f0a4a",
-  //     "child_category_id": "660857794257728f4aa35dee",
-  //     "product_name": "fhj",
-  //     "messure": "2",
-  //     "total_quantity": 23,
-  //     "price": 123,
-  //     "cover_image": "hkjkl",
-  //     "product_images": [
-  //         "09009"
-  //     ],
-  //     "currency": "ghkhjk",
-  //     "description": "hjk",
-  //     "createdAt": "2024-03-31T19:12:33.375Z",
-  //     "updatedAt": "2024-03-31T19:12:33.375Z",
-  //     "__v": 0
-  // },
   const [state, setState] = useState<state>({
     headerData: [
       {
@@ -107,14 +88,8 @@ const ProductCom: React.FC = () => {
       },
       {
         accessorKey: 'parentCategory',
-        header: 'Parent Category',
+        header: 'Category',
         size: 150,
-      },
-      {
-        accessorKey: 'childCategory',
-        header: 'Child Category',
-        size: 150,
-        enableClickToCopy: false,
       },
       {
         accessorKey: 'totalQuantity',
@@ -201,10 +176,10 @@ const ProductCom: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (parentCategoryList.length > 0 && childCategoryList.length > 0) {
+    if (parentCategoryList.length > 0) {
       listApiCall();
     }
-  }, [parentCategoryList, childCategoryList])
+  }, [parentCategoryList])
 
   useEffect(() => {
     if (submitDisable === false && (uploadImgPath || multipleImgPath.length > 0)) {
@@ -256,8 +231,6 @@ const ProductCom: React.FC = () => {
         ...pre,
         parentCategoryList: response.response_data
       }))
-      childCategoryApiCall()
-
     } catch (error) {
       setState((pre) => ({
         ...pre,
@@ -269,27 +242,6 @@ const ProductCom: React.FC = () => {
     }
   }
 
-  const childCategoryApiCall = async (): Promise<void> => {
-    const method: string = "GET";
-    const url: string = "category/get/childCategory";
-    const data: any = {}
-    setState((pre) => ({ ...pre, showLoader: true }))
-    try {
-      const response = await HttpRequest({ method, url, data });
-      setState((pre) => ({
-        ...pre,
-        childCategoryList: response.response_data
-      }))
-    } catch (error) {
-      setState((pre) => ({
-        ...pre,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
-      }))
-    }
-  }
   const listApiCall = async (): Promise<void> => {
     const method: string = "GET";
     const url: string = "product/get/product";
@@ -302,6 +254,7 @@ const ProductCom: React.FC = () => {
     } catch (error) {
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -313,13 +266,11 @@ const ProductCom: React.FC = () => {
 
   const frameTableFun = (data: any): void => {
     const frameColumnData = data.map((item: any): any => {
-      let parent = parentCategoryList.find((each) => each._id === item.parent_category_id)
-      let child = childCategoryList.find((each) => each._id === item.child_category_id)
+      let parent = parentCategoryList.find((each) => each._id === item.category_id)
 
       let obj: any = {
         productName: item.product_name ? item.product_name : "-",
         parentCategory: parent && parent.name ? parent.name : "-",
-        childCategory: child && child.child_category_name ? child.child_category_name : "-",
         totalQuantity: item.total_quantity,
         messure: item.messure ? item.messure : "-",
         price: item.price,
@@ -343,8 +294,7 @@ const ProductCom: React.FC = () => {
     }))
   }
   const editBtnClick = (data: any): void => {
-    let parent = parentCategoryList.find((each) => each._id === data.parent_category_id)
-    let child = childCategoryList.find((each) => each._id === data.child_category_id)
+    let parent = parentCategoryList.find((each) => each._id === data.category_id)
 
     setState((pre) => ({
       ...pre,
@@ -355,7 +305,7 @@ const ProductCom: React.FC = () => {
       openDialog: true,
       parentVal: parent,
       parentValErr: false,
-      childVal: child,
+      // childVal: child,
       childValErr: false,
       description: data.description,
       productName: data.product_name,
@@ -457,6 +407,7 @@ const ProductCom: React.FC = () => {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "success",
         openSnakbarMsg: response.response_message,
@@ -466,6 +417,7 @@ const ProductCom: React.FC = () => {
     } catch (error) {
       setState((pre) => ({
         ...pre,
+        showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
         openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
@@ -569,9 +521,12 @@ const ProductCom: React.FC = () => {
     const data: any = formData
     try {
       const response = await HttpRequest({ method, url, data });
+      const imageUrls = response.imageUrls ? response.imageUrls : [];
+      console.log("response ",response);
+      
       setState((pre) => ({
         ...pre,
-        multipleImgPath: response.filter((item) => item.imageUrl),
+        multipleImgPath: imageUrls.filter((item) => item),
       }))
     } catch (error) {
       setState((pre) => ({
@@ -598,8 +553,7 @@ const ProductCom: React.FC = () => {
         showLoader: false,
         uploadImgPath: response.imageUrl,
         openSnakbar: true,
-        openSnakbarType: "success",
-        openDialog: false
+        openSnakbarType: "success"
       }))
     } catch (error) {
       setState((pre) => ({
@@ -618,13 +572,12 @@ const ProductCom: React.FC = () => {
     const url: string = `product/update/product/${selectedItem._id}`;
     const data: any = {
       "product_name": productName,
-      "parent_category_id": parentVal._id,
-      "child_category_id": childVal._id,
+      "category_id": parentVal._id,
       "messure": messure,
       "total_quantity": Number(totalQuantity),
       "price": Number(priceVal),
       "cover_image": uploadImgPath ? uploadImgPath : selectedItem.cover_image,
-      "product_images": multipleImgPath.length > 0 ? multipleImgPath.map((item) => item.imageUrl) : selectedItem.product_images,
+      "product_images": multipleImgPath.length > 0 ? multipleImgPath.map((item) => item) : selectedItem.product_images,
       "currency": "INR",
       "description": description,
       "updatedAt": moment()
@@ -656,13 +609,12 @@ const ProductCom: React.FC = () => {
     const url: string = "product/create/product";
     const data: any = {
       "product_name": productName,
-      "parent_category_id": parentVal._id,
-      "child_category_id": childVal._id,
+      "category_id": parentVal._id,
       "messure": messure,
       "total_quantity": Number(totalQuantity),
       "price": Number(priceVal),
       "cover_image": uploadImgPath,
-      "product_images": multipleImgPath.map((item) => item.imageUrl),
+      "product_images": multipleImgPath.map((item) => item),
       "currency": "INR",
       "description": description
     }
@@ -670,6 +622,7 @@ const ProductCom: React.FC = () => {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({
         ...pre,
+        openDialog: false,
         openSnakbar: true,
         openSnakbarType: "success",
         openSnakbarMsg: response.response_message ? response.response_message : "Something went wrong"
@@ -936,7 +889,7 @@ const ProductCom: React.FC = () => {
 
       <Dialog fullWidth fullScreen open={openDialog}>
         <DialogTitle className='border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3' >
-          {isEdit ? "Edit Ads Image Card " : "Add New Ads Image Card"}
+          {isEdit ? "Edit Product " : "Add New Product"}
           <IconButton onClick={handleClose}><CancelIcon className='text-white' /></IconButton>
         </DialogTitle>
         <DialogContent>
