@@ -4,9 +4,7 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
 
 console.log(baseUrl);
 
-const HttpRequest = async ({ method, url, encrypted }) => {
-  console.log(encrypted);
-  
+const HttpRequest = async ({ method, url, data }) => {  
   try {
     const token = localStorage.getItem('_Auth');
     
@@ -19,7 +17,7 @@ const HttpRequest = async ({ method, url, encrypted }) => {
     const response = await axios({
       method,
       url: `http://127.0.0.1:4000/${url}`,
-      data: encrypted, // Data can be either FormData, JSON, or any other valid format
+      data: data, // Data can be either FormData, JSON, or any other valid format
       headers,
     });
 
