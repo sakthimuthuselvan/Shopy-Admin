@@ -51,7 +51,7 @@ function App() {
                   {/* Sidebar Content */}
                   <SideBar />
                 </div>
-                <div className="main-content vh-100" style={{ backgroundColor: "#0306331c" }}>
+                <div className="main-content h-100" style={{ backgroundColor: "#0306331c" }}>
                   <Routes>
                     {
                       RouteList.map(({ path, component: Component }, index) => {

@@ -1,4 +1,3 @@
-import { colors } from "@mui/material";
 import React from "react";
 import Chart from "react-apexcharts";
 
@@ -33,8 +32,8 @@ const LineChart = () => {
 
   const chartSeries = [
     {
-      name: "Sales",
-      data: [30, 40, 45, 50, 49, 60], // Data points
+      name: "Sales (INR)",
+      data: [1040, 1200, 2450, 3350, 2000, 220], // Data points
     },
   ];
 

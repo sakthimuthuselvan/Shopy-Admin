@@ -87,12 +87,12 @@ function SignIn() {
             "email": email,
             "password": password
         }
-        const encrypted = {
-            data: encrypt(JSON.stringify(data))
-        }
-        console.log("encrypted ", encrypted);
+        // const encrypted = {
+        //     data: encrypt(JSON.stringify(data))
+        // }
+        // console.log("encrypted ", encrypted);
 
-        const response = HttpRequest({ method, url, encrypted });
+        const response = HttpRequest({ method, url, data });
         response
             .then((res) => {
                 const isToken = res.data && res.data.token ? res.data.token : ""
