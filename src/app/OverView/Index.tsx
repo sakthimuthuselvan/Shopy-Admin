@@ -1,5 +1,5 @@
 import { Chip, Typography } from '@mui/material'
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, Suspense, useState } from 'react'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PersonIcon from '@mui/icons-material/Person';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
@@ -9,12 +9,14 @@ import moment from "moment"
 import "./overview.scss"
 
 
-const OrdersGraphCom = React.lazy(() => import("./OrdersGraph"))
+const OrdersGraphCom = React.lazy(() => import("./OrdersGraph"));
+const ComparisonGraph = React.lazy(() => import("./ComparisonGraph"))
+
 function Index() {
   const [cartDetails, setCardDetails] = useState({
     "total_sales": 500,
     "total_orders": 200,
-    "pending_orders": 100,
+    "pending_orders": 130,
     "new_customer": 30
   });
 
@@ -55,7 +57,7 @@ function Index() {
 
   const data = [
     {
-      "name":"",
+      "user_name":"Sakthi M",
       "_id": "67a77440710ab222b897e1a8",
       "orderId": "order_PtFTa6kNd6rnN7",
       "paymentId": "pay_PtFUFpmOUxBJU5",
@@ -78,7 +80,7 @@ function Index() {
 
     }
     return{
-      name: item.name ? item.name : "-",
+      user_name: item.user_name ? item.user_name : "-",
       amount:item.amount ? item.amount : "-",
       status: item.status ? statusVal : "-",
       created_at: item.createdAt ? moment(item.createdAt).format("ll") : "-"
@@ -93,6 +95,9 @@ function Index() {
     print: false,
     dowload: false
   };
+
+  let completed = cartDetails.total_orders - cartDetails.pending_orders
+  const compare_series = [cartDetails.pending_orders, completed ]
   return (
     <div>
       <div className='row'>
@@ -168,11 +173,10 @@ function Index() {
 
 
         <div className='col-lg-4 col-md-12 col-sm-12'>
-          <div className='jr-card'>
-            <h1>card</h1>
-            <h1>card</h1>
-            <h1>card</h1>
-            <h1>card</h1>
+          <div className='jr-card d-flex justify-content-center'>
+           <Suspense fallback={<h1> </h1>}>
+           <ComparisonGraph propData={compare_series} />
+           </Suspense>
           </div>
         </div>
 
