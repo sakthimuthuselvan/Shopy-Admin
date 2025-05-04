@@ -1,664 +1,420 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, IconButton, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import HttpRequest from '../../Utilities/ApiCall/HttpRequest';
+import MUIDataTable from "mui-datatables";
+import {
+  Autocomplete,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Typography
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import MuiTable from '../Common/MuiTable';
 import CancelIcon from '@mui/icons-material/Cancel';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import MySnackbar from '../../AlertShow/Alert';
 import Loader from '../../Utilities/Loader/Loader';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { base_url } from '../EnvImport/Index';
 
-interface state {
+interface AlertData {
   showLoader: boolean;
-  openSnakbar: boolean;
-  openSnakbarType: string;
-  openSnakbarMsg: string;
-  openDialog: boolean;
-  isEdit: boolean;
-  selectedItem: any;
-  smallImageVal: any;
-  smallImageValErr: boolean;
-  largeImageVal: any;
-  largeImageValErr: boolean;
-  isCheck: boolean;
-  submitDisable: boolean;
-  deleteDialog: boolean;
-  headerData: any;
-  columnData: any;
-
-  image1: boolean;
-  image2: boolean;
-  smallImgPath: string;
-  largeImgPath: string;
-
-  navigatePath: string;
-  navigatePathErr: boolean;
-  imgInputErr: boolean;
-  uploadImgPath: any[];
-  baseUrl: string;
-  imageViewDialog: boolean;
-  index: number;
-  categoryList: any[];
-  categoryVal: any;
-  categoryValErr: boolean;
+  openSnackbar: boolean;
+  openSnackbarType: string;
+  openSnackbarMsg: string;
 }
 
-const CardImage: React.FC = () => {
-  const imageInputSmall = useRef<HTMLInputElement>(null);
-  const imageInputLarge = useRef<HTMLInputElement>(null);
+interface Category {
+  _id: string;
+  name: string;
+  description: string;
+  category_img: string;
+}
 
-  const navigateInputFocus = useRef<HTMLInputElement>(null);
-  const baseUrlPath: string = base_url ? base_url : '';
+interface Slider {
+  _id: string;
+  image: string;
+  category: {
+    _id: string,
+    name: string
+  };
+}
 
-  const [state, setState] = useState<state>({
-    headerData: [
+const SliderAdmin: React.FC = () => {
+  const [headerData] = useState([
+    {
+      name: "categoryImage",
+      label: "Ad Image",
+      options: {
+        filter: true,
+        sort: true,
+      }
+    },
+    {
+      name: "categoryVal",
+      label: "Category",
+      options: {
+        filter: true,
+        sort: false,
+      }
+    },
+    {
+      name: "action",
+      label: " ",
+      options: {
+        filter: false,
+        sort: false,
+      }
+    }
+  ]);
 
-      {
-        accessorKey: 'catgoryImage',
-        header: 'Ad Image',
-        size: 150,
-        enableClickToCopy: false,
-      },
-      {
-        accessorKey: 'navigatePath', //access nested data with dot notation
-        header: 'Navigate Path',
-        size: 150,
-      },
-      {
-        accessorKey: 'action', //normal accessorKey
-        header: 'Action',
-        size: 200,
-        enableSorting: false,
-        enableColumnActions: false,
-        enableClickToCopy: false,
-      },
-    ],
-    columnData: [],
+  const [columnData, setColumnData] = useState<any[]>([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<Slider | null>(null);
+  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [sliderList, setSliderList] = useState<Slider[]>([]);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+  const [categoryVal, setCategoryVal] = useState<Category | null>(null);
+  const [categoryValErr, setCategoryValErr] = useState(false);
+  const [imagePath, setImagePath] = useState<string>("");
+  const [isCheck, setIsCheck] = useState<boolean>(false);
+  const [imageVal, setImageVal] = useState<any>(null);
+  const [imageValErr, setImageValErr] = useState<boolean>(false);
+  const [openImgDialog, setOpenImgDialog] = useState<boolean>(false);
+  const [imageViewDialog, setImageViewDialog] = useState<boolean>(false);
+  const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
+
+  const [alertData, setAlertData] = useState<AlertData>({
     showLoader: false,
-    openSnakbar: false,
-    openSnakbarType: "",
-    openSnakbarMsg: "",
-    openDialog: false,
-    isEdit: false,
-    selectedItem: {},
-    imgInputErr: false,
-    navigatePath: "",
-    navigatePathErr: false,
-    smallImageVal: {},
-    largeImageVal: {},
-    isCheck: false,
-    smallImageValErr: false,
-    largeImageValErr: false,
-    submitDisable: false,
-    deleteDialog: false,
-    uploadImgPath: [],
-    baseUrl: baseUrlPath,
-    imageViewDialog: false,
-    index: 0,
+    openSnackbar: false,
+    openSnackbarType: '',
+    openSnackbarMsg: ''
+  });
 
-    image1: false,
-    image2: false,
-    smallImgPath: "",
-    largeImgPath: "",
-    categoryList: [],
-    categoryVal: null,
-    categoryValErr: false,
-  })
-  const [shouldCallApi, setShouldCallApi] = useState<Boolean>(false)
-  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr, navigatePath, navigatePathErr, smallImageVal, isCheck, smallImageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, baseUrl, imageViewDialog, largeImageVal, largeImageValErr, index, image1, image2, smallImgPath, largeImgPath, categoryList, categoryVal, categoryValErr } = state;
 
 
   useEffect(() => {
-    listApiCall();
-    categoryListApiCall()
+    initialApiCall();
   }, []);
 
-  const categoryListApiCall = async (): Promise<void> => {
+  const initialApiCall = async (): Promise<void> => {
     const method: string = "GET";
-    const url: string = "category/get/parentCategory";
-    const data: any = {}
-    setState((pre) => ({ ...pre, showLoader: true }))
-    try {
-      const response = await HttpRequest({ method, url, data });
-      console.log(response.response_data);
-      setState((pre) => ({ ...pre, showLoader: false, categoryList: response.response_data }))
+    const cate_url: string = "category/get/parentCategory";
+    const slider_url: string = "slider/get/slider/banner";
 
+    setAlertData((pre) => ({ ...pre, showLoader: true }));
+
+    try {
+      const cate_response = await HttpRequest({ method, url: cate_url, data: {} });
+      const slider_response = await HttpRequest({ method, url: slider_url, data: {} });
+
+      setCategoryList(() => {
+        frameTableFun(slider_response.response_data, cate_response.response_data);
+        setSliderList(slider_response.response_data);
+        return cate_response.response_data
+      });
+
+
+      setAlertData((pre) => ({ ...pre, showLoader: false }));
     } catch (error) {
-      console.log(error.error_response);
-      setState((pre) => ({
+      setAlertData((pre) => ({
         ...pre,
         showLoader: false,
         openSnakbar: true,
         openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
-      }))
+        openSnakbarMsg: error.response_message || "Something went wrong",
+      }));
     }
-  }
+  };
 
-  useEffect(() => {
-    // Call the API only when uploadImgPath is not empty
-    if (shouldCallApi) {
-      if (isEdit) {
-        if (smallImgPath || largeImgPath) {
-          editAPiCall()
-          console.log("edit APi call");
-        }
-      } else {
-        if (smallImgPath && largeImgPath) {
-          AddAPiCall();
-        }
-      }
-      setShouldCallApi(false)
-      console.log("========1111", shouldCallApi);
+  const frameTableFun = (sliders: Slider[], category_list: Category[]) => {
+    const formattedData = sliders.map((item: any) => {
+      return {
+        categoryImage: <img src={item.image} alt="Ad Image" width={80} height={80} />,
+        categoryVal: item.category && item.category.name ? item.category.name : "-",
+        action: (
+          <div>
+            <IconButton className='mr-2' onClick={() => handleEditClick(item, category_list)}>
+              <EditIcon className="text-primary" />
+            </IconButton>
+            <IconButton onClick={() => handleDeleteClick(item)}>
+              <DeleteIcon className="text-danger" />
+            </IconButton>
+          </div>
+        )
+      };
+    });
 
+    setColumnData(formattedData);
+  };
+
+
+  const handleEditClick = (data: Slider, category_list: Category[]) => {
+    const category = category_list.find((cat) => cat._id === data.category._id) || null;
+    if (!category_list || category_list.length === 0) {
+      return;
     }
-    console.log("========22222", shouldCallApi);
+
+    setSelectedItem(data);
+    setOpenDialog(true);
+    setCategoryVal(category);
+    setIsEdit(true)
+    setImagePath(data.image)
+    setIsCheck(false)
+  };
 
 
-  }, [smallImgPath, largeImgPath]);
-
-
-  const listApiCall = async (): Promise<void> => {
-    const method: string = "GET";
-    const url: string = "slider/get/slider/banner";
-    const data: any = {}
-    setState((pre) => ({ ...pre, showLoader: true }))
-    try {
-      const response = await HttpRequest({ method, url, data });
-      console.log(response.response_data);
-      setState((pre) => ({ ...pre, showLoader: false }))
-      frameTableFun(response.response_data)
-    } catch (error) {
-      console.log(error.error_response);
-      setState((pre) => ({
-        ...pre,
-        showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
-      }))
-    }
-  }
-
-
-
-  const frameTableFun = (data: any): void => {
-    // parentCategory,catgoryImage,childCategoryName,description,action
-    const frameColumnData = data.map((item: any): any => {
-      let finded: any = categoryList.find((data)=> data._id === item.navigate_category)
-
-      let obj: any = {
-        catgoryImage: <img src={item.sm_img} alt='ad_image_card' width={80} height={80} />,
-        navigatePath: finded && finded.name ? finded.name : "-",
-        action: <div>
-          <IconButton onClick={() => editBtnClick(item)}><EditIcon className='text-primary' /></IconButton>
-          <IconButton onClick={() => deleteBtnClick(item)}> <DeleteIcon className='text-danger' /></IconButton>
-        </div>
-      }
-
-      return obj;
-    })
-
-    setState((pre) => ({
-      ...pre,
-      columnData: frameColumnData
-    }))
-  }
-  const editBtnClick = (data: any): void => {
-    console.log(data);
-
-    setState((pre) => ({
-      ...pre,
-      selectedItem: data,
-      isEdit: true,
-      isCheck: false,
-      navigatePath: data.navigate_path,
-      openDialog: true,
-      image1: false,
-      image2: false,
-      smallImgPath: "",
-      largeImgPath: ""
-    }))
-  }
-  const deleteBtnClick = (data: any): void => {
-    setState((pre) => ({
-      ...pre,
-      deleteDialog: true,
-      selectedItem: data
-    }))
-  }
-
-  const addBtnClickFun = (): void => {
-    setState((pre) => ({
-      ...pre,
-      openDialog: true,
-      isEdit: false,
-      navigatePath: "",
-      smallImageValErr: false,
-      smallImageVal: {},
-      largeImageVal: {},
-      largeImageValErr: false,
-      navigatePathErr: false,
-      imgInputErr: false,
-      submitDisable: false,
-      image1: false,
-      image2: false,
-      smallImgPath: "",
-      largeImgPath: ""
-    }))
-  }
-
-  const handleFileChange = (event: any, type: string): void => {
-    const selectedFile = event.target.files[0]
-    {
-      if (type === "small") {
-        setState((pre) => ({
-          ...pre,
-          smallImageVal: selectedFile,
-          smallImageValErr: false,
-          isCheck: true,
-          submitDisable: false,
-          image1: true
-        }))
-      } else {
-        setState((pre) => ({
-          ...pre,
-          largeImageVal: selectedFile,
-          largeImageValErr: false,
-          isCheck: true,
-          image2: true,
-          submitDisable: false
-        }))
-      }
-
-    }
+  const handleDeleteClick = (data: Slider) => {
+    // Implement delete functionality
+    setDeleteDialog(true)
+    setSelectedItem(data);
 
   };
-  const handleChange = (e: any): void => {
-    setState((pre) => ({
-      ...pre,
-      navigatePath: e.target.value,
-      navigatePathErr: false
-    }))
-  }
 
-  const categoryChange = (val) => {
-    setState((pre) => ({
-      ...pre,
-      categoryVal: val ? val : {},
-      categoryValErr: false
-    }))
-  }
 
-  const confirmDeleteBtnClick = async (): Promise<void> => {
-    const method = "DELETE";
-    const url = `slider/delete/slider/banner/${selectedItem._id}`;
-    const data = {}
-    try {
-      const response = await HttpRequest({ method, url, data });
-      console.log(response);
-      setState((pre) => ({
-        ...pre,
-        openSnakbar: true,
-        openSnakbarType: "success",
-        openSnakbarMsg: response.response_message,
-        deleteDialog: false
-      }))
-      listApiCall()
-    } catch (error) {
-      console.log(error.response_message);
-      setState((pre) => ({
-        ...pre,
-        showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-      }))
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleCategoryChange = (event: any, newValue: Category | null) => {
+    setCategoryVal(newValue);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImageVal(event.target.files[0]);
+      setImageValErr(false);
+      setIsCheck(true)
     }
-
-  }
-
-
-  const handleClose = (): void => {
-    setState((pre) => ({
-      ...pre,
-      openDialog: false
-    }))
-  }
-
-  const submitBtnClickFun = (): void => {
-    if (categoryVal === null || (categoryVal && Object.keys(categoryVal).length === 0)) {
-      setState((pre) => ({
-        ...pre,
-        categoryValErr: true
-      }))
-      // navigateInputFocus.current?.focus()
-      document.getElementById("navigateInputFocus")?.focus()
-    } else if (!smallImageVal || Object.keys(smallImageVal).length > 0) {
-      setState((pre) => ({
-        ...pre,
-        smallImageVal: true
-      }))
-      imageInputSmall.current?.focus()
-
-    } if (!largeImageVal || Object.keys(largeImageVal).length > 0) {
-      setState((pre) => ({
-        ...pre,
-        largeImageVal: true
-      }))
-      imageInputLarge.current?.focus()
-
-    } else {
-      console.log("=============isEdit ", isEdit);
-      console.log("============= isCheck", isCheck);
-      if (isEdit && isCheck) {
-        console.log("edit api call with imag");
-        //img api call
-        if (image1) {
-          smallImgUpload()
-        }
-        if (image2) {
-          largeImgUpload()
-        }
-        // imageUploadApiCall()
-
-        // edit api call
-      } else if (isEdit === false && isCheck === true) {
-        console.log("addAPi call with imag");
-        // image upload and add api call
-        console.log("image1 ", image1);
-        console.log("image2 ", image2);
-
-        if (image1) {
-          console.log("iamge 1");
-
-          smallImgUpload()
-        }
-        if (image2) {
-          console.log("iamge 2");
-
-          largeImgUpload()
-        }
-        // imageUploadApiCall()
-      } else {
-        editAPiCall()
-        console.log("edit api call without image api call");
-
-      }
-    }
-  }
-
-  const smallImgUpload = async (): Promise<void> => {
-    const formData = new FormData();
-    formData.append('image', smallImageVal);
+  };
 
 
-    const method: string = "POST";
-    const url: string = "single/image/upload";
-    const data: any = formData
-    try {
-      const response = await HttpRequest({ method, url, data });
-      console.log();
-      setShouldCallApi(true)
-      setState((pre) => ({
-        ...pre,
-        smallImgPath: response.imageUrl,
-        openSnakbar: true,
-        openSnakbarType: "success",
-        openDialog: false
-      }))
-    } catch (error) {
-      console.log(error.error_response);
-      setState((pre) => ({
-        ...pre,
-        showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
-      }))
-    }
-  }
-
-
-
-  const largeImgUpload = async (): Promise<void> => {
-    const formData = new FormData();
-    formData.append('image', largeImageVal);
-
-
-    const method: string = "POST";
-    const url: string = "single/image/upload";
-    const data: any = formData
-    try {
-      const response = await HttpRequest({ method, url, data });
-      setShouldCallApi(true)
-      setState((pre) => ({
-        ...pre,
-        largeImgPath: response.imageUrl,
-        openSnakbar: true,
-        openSnakbarType: "success",
-        openDialog: false
-      }))
-    } catch (error) {
-      setState((pre) => ({
-        ...pre,
-        showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
-      }))
-    }
-  }
-
-
-  const editAPiCall = async (): Promise<void> => {
+  const editAPiCall = async (image_url: string): Promise<void> => {
     const method = "PUT";
-    const url: string = `slider/update/slider/banner/${selectedItem._id}`;
+    const url: string = `slider/update/slider/banner/${selectedItem?._id}`;
     const data: any = {
-      "sm_img": smallImgPath ? smallImgPath : selectedItem.sm_img,
-      "lg_img": largeImgPath ? largeImgPath : selectedItem.lg_img,
-      "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category
-
+      "image": image_url,
+      "category": categoryVal?._id ? categoryVal._id : selectedItem?.category
     }
 
     try {
       const response = await HttpRequest({ method, url, data });
-      setState((pre) => ({
-        ...pre,
-        openDialog: false,
-        openSnakbar: true,
-        openSnakbarType: "success",
-        openSnakbarMsg: response.response_message ? response.response_message : "Something went wrong"
-      }))
-      listApiCall()
-    } catch (error) {
-      setState((pre) => ({
+      setAlertData((pre) => ({
         ...pre,
         showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
+        openSnackbar: true,
+        openSnackbarType: 'success',
+        openSnackbarMsg: response.response_message ? response.response_message : "Something went wrong"
+      }))
+      initialApiCall()
+    } catch (error) {
+      setAlertData((pre) => ({
+        ...pre,
+        showLoader: false,
+        openSnackbar: true,
+        openSnackbarType: 'error',
+        openSnackbarMsg: error.response_message ? error.response_message : "Something went wrong"
       }))
     }
   }
 
-  const AddAPiCall = async (): Promise<void> => {
+  const addAPiCallFun = async (image_url: string): Promise<void> => {
     const method = "POST";
     const url: string = "slider/create/banner";
     const data: any = {
-      "sm_img": smallImgPath ? smallImgPath : "",
-      "lg_img": largeImgPath ? largeImgPath : "",
-      "navigate_category": categoryVal._id ? categoryVal._id : ""
+      "image": image_url ? image_url : "",
+      "category": categoryVal?._id || ""
     }
 
     try {
       const response = await HttpRequest({ method, url, data });
-      console.log(response);
-      setState((pre) => ({
-        ...pre,
-        openSnakbar: true,
-        openSnakbarType: "success",
-        openSnakbarMsg: response.response_message ? response.response_message : "Something went wrong",
-        openDialog: false
-      }))
-      listApiCall()
-    } catch (error) {
-      console.log(error);
-      setState((pre) => ({
+      setAlertData((pre) => ({
         ...pre,
         showLoader: false,
-        openSnakbar: true,
-        openSnakbarType: "error",
-        openSnakbarMsg: error.response_message ? error.response_message : "Something went wrong"
-
+        openSnackbar: true,
+        openSnackbarType: 'success',
+        openSnackbarMsg: response.response_message ? response.response_message : "Something went wrong"
+      }))
+      initialApiCall()
+    } catch (error) {
+      setAlertData((pre) => ({
+        ...pre,
+        showLoader: false,
+        openSnackbar: true,
+        openSnackbarType: 'error',
+        openSnackbarMsg: error.response_message ? error.response_message : "Something went wrong"
       }))
     }
   }
-  console.log(isEdit);
 
+  const imageApiCallFun = async (): Promise<void> => {
+    const formData = new FormData();
+    formData.append('image', imageVal);
+    const method: string = "POST";
+    const url: string = "single/image/upload";
+    const data: any = formData
 
-  const viewImageDialog = (num: number): void => {
-    setState((pre) => ({
+    setAlertData((pre) => ({
       ...pre,
-      imageViewDialog: true,
-      index: num
+      showLoader: true
     }))
+    try {
+      const response = await HttpRequest({ method, url, data });
+      setImagePath((pre) => {
+        if (isEdit === false) {
+          addAPiCallFun(response.imageUrl)
+        } else {
+          editAPiCall(response.imageUrl)
+        }
+
+        setAlertData((pre) => ({
+          ...pre,
+          showLoader: false
+        }))
+        return response.imageUrl
+      })
+    } catch (error) {
+      setAlertData((pre) => ({
+        ...pre,
+        showLoader: false,
+        openSnackbar: true,
+        openSnackbarType: 'error',
+        openSnackbarMsg: error.response_message ? error.response_message : "Something went wrong"
+      }))
+    }
   }
 
-  console.log("============================================= shouldCallApishouldCallApi", shouldCallApi);
+  const handleSubmit = () => {
+    // Implement submit functionality
+    if (!categoryVal || (categoryVal && Object.keys(categoryVal).length === 0)) {
+      setCategoryValErr(true)
+      document.getElementById("categoryVal")?.focus()
+    } else {
 
-  return (
-    <div>
-      <Loader open={showLoader} />
-
-      <MySnackbar open={openSnakbar} type={openSnakbarType} variant={"filled"} message={openSnakbarMsg} duration={3000} handleClose={() => setState((pre) => ({ ...pre, openSnakbar: false }))} />
-      <div className='jr-card d-flex justify-content-between align-items-center'>
-        <h4 className='bold'>Slider</h4>
-        {/* Button component with onClick event */}
-
-        <Button
-          variant="contained"
-          size="small"
-          className='bg-primary'
-          onClick={addBtnClickFun} // Call the addBtnClickFun function when the button is clicked
-        >
-          Add
-        </Button>
-      </div>
-
-      <div>
-        <MuiTable
-          headerData={headerData}
-          columnData={columnData}
-          options={""}
-        />
-      </div>
+      if (isEdit === false) {
+        imageApiCallFun()
+      } else if (isEdit === true && isCheck === true) {
+        imageApiCallFun()
+      } else {
+        let img = selectedItem && selectedItem.image ? selectedItem.image : ""
+        editAPiCall(img)
+      }
+    };
+  }
 
 
-      <Dialog
-        fullWidth
-        maxWidth={"md"}
-        open={openDialog}
-      >
-        <DialogTitle className='border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3' >
-          {isEdit ? "Edit Ads Image Card " : "Add New Ads Image Card"}
-          <IconButton onClick={handleClose}><CancelIcon className='text-white' /></IconButton>
+  const handleAddClick = () => {
+    setOpenDialog(true);
+    setIsEdit(false);
+    setCategoryVal(null);
+    setImageVal(null);
+    setIsCheck(false)
+  };
+
+  const openDialogHtmlBuild = (): JSX.Element => {
+    return (
+      <Dialog fullWidth maxWidth="md" open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle className="border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3">
+          {isEdit ? 'Edit Ads Image Card' : 'Add New Ads Image Card'}
+          <IconButton onClick={handleCloseDialog}>
+            <CancelIcon className="text-white" />
+          </IconButton>
         </DialogTitle>
-        <DialogContent>
-
-          <div className='mt-3'>
-            {/* <TextField
-              ref={navigateInputFocus}
-              id="category_name"
-              label="Navigate Path"
-              variant="outlined"
-              value={navigatePath}
-              autoComplete='off'
-              onChange={(e) => handleChange(e)}
-              error={navigatePathErr}
-              helperText={navigatePathErr ? "This field is required" : null}
-              fullWidth
-            /> */}
+        <DialogContent className='row'>
+          <div className='col-12 mt-3'>
             <Autocomplete
-              id='navigateInputFocus'
-              ref={navigateInputFocus}
-              disablePortal
-              onChange={(e, val) => categoryChange(val)}
               options={categoryList}
-              getOptionLabel={(item) => item.name}
+              getOptionLabel={(option) => option.name}
               value={categoryVal}
+              onChange={handleCategoryChange}
               fullWidth
               renderInput={(params) => <TextField {...params} label="Category" error={categoryValErr} />}
             />
           </div>
-          <div className='row'>
-            <div className={isEdit ? "d-flex col-lg-10 col-md-10 col-sm-10" : ""}>
-              <div className='mt-3 w-100'>
-                <TextField
-                  ref={imageInputSmall}
-                  id='ChildCategoryImg'
-                  type="file"
-                  label="Small Screen Image"
-                  variant="outlined"
-                  onChange={(e) => handleFileChange(e, "small")}
-                  // value={ChildCategoryImg}
-                  InputLabelProps={{ shrink: true }}
-                  fullWidth
-                  inputProps={{ accept: 'image/*' }}  // Accept only image files
-                  error={smallImageValErr}
-                  helperText={smallImageValErr ? "This field is required" : null}
-                />
-              </div>
-            </div>
 
-            {isEdit ? <div className='col-2 d-flex align-items-center justify-content-center'>
-              <IconButton onClick={() => viewImageDialog(0)}><RemoveRedEyeIcon className='text-primary' /></IconButton>
-            </div> : null}
+          <div className={`mt-3 ${isEdit ? "col-10" : "col-12"}`}>
+            <TextField
+              type="file"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              inputProps={{ accept: 'image/*' }}
+              onChange={handleFileChange}
+              error={imageValErr}
+              helperText={imageValErr ? 'This field is required' : null}
+            />
           </div>
-
-          <div className='row'>
-            <div className={isEdit ? "d-flex col-lg-10 col-md-10 col-sm-10" : ""}>
-              <div className='mt-3 w-100'>
-                <TextField
-                  ref={imageInputLarge}
-                  id='ChildCategoryImg'
-                  type="file"
-                  label="Large Screen Image"
-                  variant="outlined"
-                  onChange={(e) => handleFileChange(e, "large")}
-                  // value={ChildCategoryImg}
-                  InputLabelProps={{ shrink: true }}
-                  fullWidth
-                  inputProps={{ accept: 'image/*' }}  // Accept only image files
-                  error={largeImageValErr}
-                  helperText={largeImageValErr ? "This field is required" : null}
-                />
-              </div>
-            </div>
-
-            {isEdit ? <div className='col-2 d-flex align-items-center justify-content-center'>
-              <IconButton onClick={() => viewImageDialog(1)}><RemoveRedEyeIcon className='text-primary' /></IconButton>
-            </div> : null}
-          </div>
+          {isEdit ? <div className='col-2 d-flex align-items-center justify-content-center'>
+            <IconButton onClick={() => viewImageDialog()}><RemoveRedEyeIcon className='text-primary' /></IconButton>
+          </div> : null}
         </DialogContent>
-        <DialogActions >
-          <div className='pr-3'>
-            <Button variant="contained" size="medium" color='success'
-              onClick={() => submitBtnClickFun()}
-              className='mx-4 mb-3'
-              disabled={submitDisable}
-            >Submit </Button>
-          </div>
+        <DialogActions>
+          <Button variant="contained" color="success" onClick={handleSubmit} disabled={submitDisabled}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
+    )
+  }
 
+  const viewImageDialog = (): void => {
+    setImageViewDialog(true)
+  }
+
+  const imageViewDialogHtmlBuild = (): JSX.Element => {
+    return (
+      <Dialog
+        fullWidth
+        maxWidth={"md"}
+        open={imageViewDialog}
+      >
+        <DialogTitle className='border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3' >
+          {"View Image"}
+          <IconButton onClick={() => setImageViewDialog(false)}><CancelIcon className='text-white' /></IconButton>
+        </DialogTitle>
+        <DialogContent className='d-flex justify-content-center'>
+
+          {selectedItem && Object.keys(selectedItem).length > 0 ?
+            <img src={selectedItem.image} alt='ad_image_card' height={"400px"} />
+            : null
+          }
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  const confirmDeleteBtnClick = async (): Promise<void> => {
+    const method: string = "DELETE";
+    const slider_url: string = `slider/delete/banner/${selectedItem?._id}`;
+
+    setAlertData((pre) => ({ ...pre, showLoader: true }));
+
+    try {
+      const response = await HttpRequest({ method, url: slider_url, data: {} });
+      setAlertData((pre) => ({
+        ...pre, showLoader: false,
+        openSnakbar: true,
+        openSnakbarType: "success",
+        openSnakbarMsg: response.response_message ?? "Something went wrong"
+      }));
+      setDeleteDialog(false)
+      initialApiCall();
+    } catch (error) {
+      setAlertData((pre) => ({
+        ...pre,
+        showLoader: false,
+        openSnakbar: true,
+        openSnakbarType: "error",
+        openSnakbarMsg: error.response_message || "Something went wrong",
+      }));
+    }
+  };
+
+  const deleteHtmlBuild = () => {
+    return (
       <Dialog
         open={deleteDialog}
         aria-labelledby="alert-dialog-title"
@@ -670,37 +426,62 @@ const CardImage: React.FC = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure to want to delete {selectedItem.name}?
+            Are you sure to want to delete this?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setState((pre) => ({ ...pre, deleteDialog: false }))}>Cancel</Button>
+          <Button onClick={() => setDeleteDialog(false)}>Cancel</Button>
           <Button className='text-danger' onClick={() => confirmDeleteBtnClick()} autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+    )
+  }
+
+  const options = {
+    filterType: 'checkbox',
+    selectableRowsHeader: false,
+    selectableRowsHideCheckboxes: false,
+    selectableRows: "none",
+    print: false,
+    dowload: false
+  };
 
 
-      <Dialog
-        fullWidth
-        maxWidth={"md"}
-        open={imageViewDialog}
-      >
-        <DialogTitle className='border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3' >
-          {"View Image"}
-          <IconButton onClick={() => setState((pre) => ({ ...pre, imageViewDialog: false }))}><CancelIcon className='text-white' /></IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {Object.keys(selectedItem).length > 0 ?
-            <img src={(index === 0 ? selectedItem.sm_img : selectedItem.lg_img)} alt='ad_image_card' width={"500px"} height={"500px"} />
-            : null
-          }
+  return (
+    <div>
+      <Loader open={alertData.showLoader} />
+      <MySnackbar
+        open={alertData.openSnackbar}
+        type={alertData.openSnackbarType}
+        variant="filled"
+        message={alertData.openSnackbarMsg}
+        duration={3000}
+        handleClose={() => setAlertData((prev) => ({ ...prev, openSnackbar: false }))}
+      />
 
-        </DialogContent>
-      </Dialog>
+      <div className="jr-card d-flex justify-content-between align-items-center">
+        <h4 className="bold">Slider</h4>
+        <Button variant="contained" size="small" className="bg-primary" onClick={handleAddClick}>
+          Add
+        </Button>
+      </div>
+      <MUIDataTable
+        // title={"Recent Orders"}
+        data={columnData}
+        columns={headerData}
+        options={options}
+      />
+
+
+      {openDialog === true && openDialogHtmlBuild()}
+      {imageViewDialog === true && imageViewDialogHtmlBuild()}
+      {deleteDialog === true && deleteHtmlBuild()}
+
+
     </div>
-  )
-}
+  );
+};
 
-export default CardImage
+export default SliderAdmin;

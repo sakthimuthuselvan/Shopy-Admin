@@ -31,14 +31,14 @@ const Index: React.FC = () => {
     openSnakbarMsg: ""
   })
 
-  const { fontVal, primaryVal, secondaryVal, successVal, openSnakbarMsg, openSnakbar, openSnakbarType, companyName, favIcon, favIconUrl,submitDisable } = formVal;
+  const { fontVal, primaryVal, secondaryVal, successVal, openSnakbarMsg, openSnakbar, openSnakbarType, companyName, favIcon, favIconUrl, submitDisable } = formVal;
 
 
   useEffect(() => {
     getThemeApiCallFun()
-  },[])
+  }, [])
 
-  const getThemeApiCallFun=()=>{
+  const getThemeApiCallFun = () => {
     const method: string = "GET";
     const url: string = "site-setting-api/get";
     const data: any = {}
@@ -46,32 +46,31 @@ const Index: React.FC = () => {
   }
 
 
- const getThemeResFun=(response)=>{
-  const data = response && response.response_data ? response.response_data : {};
-  if(Object.keys(data).length>0){
-  //   {
-  //     "_id": "6730ecf141f54f16acf59fcd",
-  //     "company_name": "Shopy",
-  //     "fav_icon": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-  //     "font_family": "Poppins",
-  //     "primary": "#007bff",
-  //     "secondary": "#6c757d",
-  //     "success": "#28a745",
-  //     "last_update": "2024-11-10T17:27:13.430Z",
-  //     "__v": 0
-  // }
-    setFormVal((pre)=>({
-      ...pre,
-      companyName: data.company_name,
-      favIconUrl: data.fav_icon,
-      fontVal: data.font_family,
-      primaryVal: data.primary,
-      secondaryVal: data.secondary,
-      successVal: data.success,
-    }))
-  }
-    console.log("response ",response.response_data);
-    
+  const getThemeResFun = (response) => {
+    const data = response && response.response_data ? response.response_data : {};
+    if (Object.keys(data).length > 0) {
+      //   {
+      //     "_id": "6730ecf141f54f16acf59fcd",
+      //     "company_name": "Shopy",
+      //     "fav_icon": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      //     "font_family": "Poppins",
+      //     "primary": "#007bff",
+      //     "secondary": "#6c757d",
+      //     "success": "#28a745",
+      //     "last_update": "2024-11-10T17:27:13.430Z",
+      //     "__v": 0
+      // }
+      setFormVal((pre) => ({
+        ...pre,
+        companyName: data.company_name,
+        favIconUrl: data.fav_icon,
+        fontVal: data.font_family,
+        primaryVal: data.primary,
+        secondaryVal: data.secondary,
+        successVal: data.success,
+      }))
+    }
+
   }
   const submitForm = () => {
     if (!fontVal.trim()) {
@@ -119,9 +118,9 @@ const Index: React.FC = () => {
         case "formSubmitReq":
           formSubmitResFun(response)
           break;
-          case "getThemeReq":
-            getThemeResFun(response)
-            break;
+        case "getThemeReq":
+          getThemeResFun(response)
+          break;
         default:
           break;
       }
@@ -146,8 +145,6 @@ const Index: React.FC = () => {
     })
   }
   const handleChange = (e: any, state: string): void => {
-    // console.log(e.target.value)
-
     // setFontVal(e.target.value)
     setFormVal({
       ...formVal,
@@ -155,14 +152,13 @@ const Index: React.FC = () => {
       submitDisable: false
     })
   }
-  const handleChangeFile=(event)=>{
+  const handleChangeFile = (event) => {
     const selectedFile = event.target.files[0];
-console.log("selectedFile ",selectedFile);
-setFormVal((pre)=>({
-  ...pre,
-  favIcon: selectedFile,
-  submitDisable: false
-}))
+    setFormVal((pre) => ({
+      ...pre,
+      favIcon: selectedFile,
+      submitDisable: false
+    }))
 
   }
   return (
@@ -174,7 +170,7 @@ setFormVal((pre)=>({
       </div>
 
       <div className='jr-card'>
-      <div>
+        <div>
           <TextField
             variant='outlined'
             label="Site Name"
@@ -184,7 +180,7 @@ setFormVal((pre)=>({
             fullWidth
           />
         </div>
-      
+
         <div className='mt-3'>
           <TextField
             variant='outlined'
@@ -197,26 +193,26 @@ setFormVal((pre)=>({
         </div>
 
         <div className='row mt-3'>
-        {/* favIconUrl */}
-           <div className={favIconUrl ? 'col-10' : "col-12"}>
-           <TextField
-                  // ref={imageInput}
-                  id='ChildCategoryImg'
-                  type="file"
-                  label="Icon"
-                  variant="outlined"
-                  onChange={handleChangeFile}
-                  // value={ChildCategoryImg}
-                  InputLabelProps={{ shrink: true }}
-                  fullWidth
-                  inputProps={{ accept: 'image/*' }}  // Accept only image files
-                  // error={imgInputErr}
-                  // helperText={imgInputErr ? "This field is required" : null}
-                />
-           </div>
-           {favIconUrl ? <div className='col-2 d-flex  justify-content-center'>
-            <img src={favIconUrl} width={50} height={50}/>
-           </div> : null}
+          {/* favIconUrl */}
+          <div className={favIconUrl ? 'col-10' : "col-12"}>
+            <TextField
+              // ref={imageInput}
+              id='ChildCategoryImg'
+              type="file"
+              label="Icon"
+              variant="outlined"
+              onChange={handleChangeFile}
+              // value={ChildCategoryImg}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+              inputProps={{ accept: 'image/*' }}  // Accept only image files
+            // error={imgInputErr}
+            // helperText={imgInputErr ? "This field is required" : null}
+            />
+          </div>
+          {favIconUrl ? <div className='col-2 d-flex  justify-content-center'>
+            <img src={favIconUrl} width={50} height={50} />
+          </div> : null}
         </div>
         <div className='row mt-3'>
           <div className='col-10'>
@@ -266,11 +262,11 @@ setFormVal((pre)=>({
 
         <div className='d-flex justify-content-end mt-5'>
           <Button
-           onClick={() => submitForm()} 
-           variant='contained'
+            onClick={() => submitForm()}
+            variant='contained'
             color='success'
             disabled={submitDisable}
-            >Submit</Button>
+          >Submit</Button>
         </div>
       </div>
     </div>

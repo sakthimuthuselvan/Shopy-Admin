@@ -13,7 +13,6 @@ import WindowWidth from "../Utilities/index"
 import Loader from '../Utilities/Loader/Loader';
 import { useDispatch } from 'react-redux';
 import MySnackbar from '../AlertShow/Alert';
-import { encrypt } from '../Utilities/Util';
 
 function SignIn() {
     const [state, setState] = useState({
@@ -79,7 +78,6 @@ function SignIn() {
 
 
     const logInApiCall = () => {
-        console.log(111);
         setState({ ...state, showLoader: true })
         const method = "Post";
         const url = "shopy/user/login";
@@ -90,7 +88,6 @@ function SignIn() {
         // const encrypted = {
         //     data: encrypt(JSON.stringify(data))
         // }
-        // console.log("encrypted ", encrypted);
 
         const response = HttpRequest({ method, url, data });
         response
@@ -120,9 +117,9 @@ function SignIn() {
             })
     }
 
-    const goSignUp = () => {
-        navigate("/signUp")
-    }
+    // const goSignUp = () => {
+    //     navigate("/signUp")
+    // }
 
     const handleClickShowPassword = () => {
         setState((pre) => {
@@ -204,7 +201,7 @@ function SignIn() {
                                         >Submit</Button>
                                     </div>
                                 </form>
-                                <div className='pb-2 pt-1'>Don't have an account <span className='text-info pointer' onClick={() => goSignUp()}>SignUp</span></div>
+                                {/* <div className='pb-2 pt-1'>Don't have an account <span className='text-info pointer' onClick={() => goSignUp()}>SignUp</span></div> */}
                             </div>
                         </div>
                     </div>

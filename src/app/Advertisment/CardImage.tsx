@@ -52,11 +52,11 @@ const CardImage: React.FC = () => {
         size: 150,
         enableClickToCopy: false,
       },
-      {
-        accessorKey: 'navigatePath', //access nested data with dot notation
-        header: 'Navigate Path',
-        size: 150,
-      },
+      // {
+      //   accessorKey: 'navigatePath', //access nested data with dot notation
+      //   header: 'Navigate Path',
+      //   size: 150,
+      // },
       {
         accessorKey: 'action', //normal accessorKey
         header: 'Action',
@@ -106,11 +106,9 @@ const CardImage: React.FC = () => {
     setState((pre) => ({ ...pre, showLoader: true }))
     try {
       const response = await HttpRequest({ method, url, data });
-      console.log(response.response_data);
       setState((pre) => ({ ...pre, showLoader: false, categoryList: response.response_data }))
 
     } catch (error) {
-      console.log(error.error_response);
       setState((pre) => ({
         ...pre,
         openSnakbar: true,

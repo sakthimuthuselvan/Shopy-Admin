@@ -7,6 +7,8 @@ const CardAdvertisment = React.lazy(() => import('../app/Advertisment/CardImage.
 const Slider = React.lazy(() => import('../app/Slider/SliderAdmin.tsx'))
 const ProductCom = React.lazy(() => import('../app/Product/ProductCom.tsx'))
 const ThemingCom = React.lazy(() => import('../app/Theming/Index.tsx'))
+const OrderCom = React.lazy(() => import('../app/Orders/index.tsx'))
+const CustomerCom = React.lazy(() => import('../app/Customers/Index.tsx'))
 
 const RouteList = [
     { path: "/", component: overview },
@@ -15,8 +17,10 @@ const RouteList = [
     { path: "/advertisment/banner", component: CardAdvertisment },
     { path: "/slider", component: Slider },
     { path: "/theming", component: ThemingCom },
+    { path: "/orders", component: OrderCom },
     { path: "/product", component: ProductCom },
-    { path: "/product", component: ProductCom }
+    { path: "/customers", component: CustomerCom }
+
 ]
 
 

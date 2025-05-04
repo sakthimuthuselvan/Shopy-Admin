@@ -228,7 +228,6 @@ const Index = () => {
         const data = formData
         try {
             const response = await HttpRequest({ method, url, data });
-            console.log(response.imageUrl);
             setUploadImgPath(response.imageUrl)
              setShouldCallApi(true);
              setState((pre) => ({

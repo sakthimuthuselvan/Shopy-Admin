@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-const ApexChart = ({propData}) => {
-  const [chartData] = useState({
+const ApexChart = ({ propData }) => {  
+  // Safely extract values from propData
+  const series = [
+    propData?.completed ?? 0,
+    propData?.pending ?? 0,
+  ];
+
+  const chartData = {
     series: propData,
     options: {
       chart: {
@@ -10,8 +16,8 @@ const ApexChart = ({propData}) => {
       },
       labels: ["Completed Orders", "Pending Orders"],
       legend: {
-        position: "bottom", // Moves labels to the bottom
-        horizontalAlign: "center", // Centers the labels
+        position: "bottom",
+        horizontalAlign: "center",
       },
       responsive: [
         {
@@ -24,11 +30,16 @@ const ApexChart = ({propData}) => {
         },
       ],
     },
-  });
+  };
 
   return (
     <div>
-      <ReactApexChart options={chartData.options} series={chartData.series} type="pie" width={380} />
+      <ReactApexChart
+        options={chartData.options}
+        series={chartData.series}
+        type="pie"
+        width={380}
+      />
     </div>
   );
 };

@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import "./nav.css"
 import MenuIcon from '@mui/icons-material/Menu';
 import WindowWidth from '../Utilities';
-import { useSelector, useDispatch } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useNavigate } from 'react-router-dom';
-import { IconButton } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 import SideBarList from "../SideBar/SidebarList";
 
 function Index() {
@@ -23,17 +22,12 @@ function Index() {
     childCheck: false,
     selectedItem: {},
     sideBarData: SideBarList,
-    childSelected: {}
+    childSelected: {},
+    openConfirmation: false
 
   })
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const { sideBar, categoryClick, check, viewMore, childCheck, sideBarData, childSelected, selectedItem } = state;
-
-
-
-  const globalState = useSelector((state) => state);
-  const dispatch = useDispatch()
+  const { sideBar, check, viewMore, childCheck, openConfirmation, sideBarData, childSelected, selectedItem } = state;
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
@@ -50,13 +44,6 @@ function Index() {
         }
       })
     }
-  };
-
-  const handleClick = (event) => {
-    navigate("/wish-list")
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   const size = WindowWidth()
@@ -80,42 +67,32 @@ function Index() {
     })
   }
 
-  const categoryClickFun = () => {
-    setState((pre) => {
-      return {
-        ...pre,
-        categoryClick: !categoryClick
-      }
-    })
-  }
-
   const homeBtnClick = () => {
     navigate("/")
-
-  }
-  const listBtnClick = (item) => {
-    navigate(item.path)
-    setState((pre) => ({
-      ...pre,
-      isClicked: false
-    }))
   }
 
   const selecSidemenu = (item, childRoute) => {
 
-    let path = item.path
-    if (path) {
-      navigate(path)
+    if (item.name === "Logout") {
+      setState((pre) => ({
+        ...pre,
+        openConfirmation: true,
+      }))
+    } else {
+      let path = item.path
+      if (path) {
+        navigate(path)
+      }
+      setState((pre) => ({
+        ...pre,
+        check: true,
+        selectedItem: item
+      }))
     }
-    setState((pre) => ({
-      ...pre,
-      check: true,
-      selectedItem: item
-    }))
+
   }
 
   const moreBtnClick = (item) => {
-    console.log(item);
     if (item && item.moreOptions === true) {
       item.moreOptions = !item.moreOptions
       setState((pre) => ({
@@ -139,6 +116,45 @@ function Index() {
     }))
     navigate(data.path)
   }
+
+  const openConfirmationBuild = () => {
+    return (
+      <Dialog
+        open={openConfirmation}
+        fullWidth
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+          Confirmation
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={() => handleLogoutCancelFun()}>
+            No, Cancel
+          </Button>
+          <Button className='text-danger' onClick={handleLogoutFun}>Yes, Logout</Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
+  const handleLogoutFun = () => {
+    localStorage.removeItem('_Auth');
+    navigate("/")
+    window.location.reload(); // ✅ reloads the current page
+  };
+
+  const handleLogoutCancelFun = () => {
+    setState((pre) => ({
+      ...pre,
+      openConfirmation: false
+    }))
+  }
+
   return (
     <div className='nav'>
       <div className={`full-nav bg-primary letter-primary`}>
@@ -196,9 +212,6 @@ function Index() {
 
                         })
                       }
-
-                      <h6 className='item pointer'>Whish List</h6>
-                      <h6 className='item pointer'>Logout</h6>
                     </div>
                   </div>
                 </div>
@@ -207,6 +220,8 @@ function Index() {
           </div>
         </div>
       </div>
+      {openConfirmation === true && openConfirmationBuild()}
+
     </div>
   )
 }

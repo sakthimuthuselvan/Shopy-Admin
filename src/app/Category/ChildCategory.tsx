@@ -143,11 +143,9 @@ const ChildCategory: React.FC = () => {
       submitDisable: false
     }))
     // Implement the logic for adding a new item or perform any action
-    console.log('Button clicked!');
   };
 
   useEffect(() => {
-    console.log('Effect running');
     listApiCall();
     categoryDropdownList()
   }, []);
@@ -194,11 +192,9 @@ const ChildCategory: React.FC = () => {
     setState((pre) => ({ ...pre, showLoader: true }))
     try {
       const response = await HttpRequest({ method, url, data});
-      console.log(response.response_data);
       setState((pre) => ({ ...pre, showLoader: false }))
       frameTableFun(response.response_data)
     } catch (error) {
-      console.log(error.error_response);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -213,8 +209,6 @@ const ChildCategory: React.FC = () => {
   const frameTableFun = (data): void => {
     // parentCategory,catgoryImage,childCategoryName,description,action
     const frameColumnData = data.map((item: any): any => {
-      console.log("baseUrl+item.child_category_img", baseUrl + item.child_category_img);
-
       let obj: any = {
         parentCategory: item.parent_category_name.name,
         catgoryImage: <img src={baseUrl + item.child_category_img} alt='child_category_image' width={80} height={80} />,
@@ -262,7 +256,6 @@ const ChildCategory: React.FC = () => {
     const data = {}
     try {
       const response = await HttpRequest({ method, url, data });
-      console.log(response);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -273,7 +266,6 @@ const ChildCategory: React.FC = () => {
       }))
       listApiCall()
     } catch (error) {
-      console.log(error.response_message);
       setState((pre) => ({
         ...pre,
         openSnakbar: true,
@@ -331,7 +323,6 @@ const ChildCategory: React.FC = () => {
   }
 
   const parentChange = (val: any) => {
-    console.log(val)
     setState((pre) => ({
       ...pre,
       parentVal: val,
@@ -339,7 +330,6 @@ const ChildCategory: React.FC = () => {
     }))
   }
   const submitBtnClickFun = () => {
-    console.log(parentVal)
     if (!parentVal || !parentVal._id) {
       setState((pre) => ({
         ...pre,
@@ -366,19 +356,15 @@ const ChildCategory: React.FC = () => {
       des.current?.focus()
     } else {
       if (isEdit && isCheck) {
-        console.log("edit api call with imag");
         //img api call
         imageUploadApiCall()
 
         // edit api call
       } else if (isEdit === false && isCheck === true) {
-        console.log("addAPi call with imag");
         // image upload and add api call
         imageUploadApiCall()
       } else {
         editAPiCall()
-        console.log("edit api call without image api call");
-
       }
     }
   }
@@ -394,7 +380,6 @@ const ChildCategory: React.FC = () => {
     const imageUpload: boolean = true
     try {
       const response = await HttpRequest({ method, url, data });
-      console.log();
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -404,7 +389,6 @@ const ChildCategory: React.FC = () => {
         openDialog: false
       }))
     } catch (error) {
-      console.log(error.error_response);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -417,8 +401,6 @@ const ChildCategory: React.FC = () => {
   }
 
   const editAPiCall = async (): Promise<void> => {
-    console.log("selectedItem ", selectedItem);
-
     const method = "PUT";
     const url: string = `category/update/childCategory/${selectedItem._id}`;
     const data: any = {
@@ -429,7 +411,6 @@ const ChildCategory: React.FC = () => {
     }
     try {
       const response = await HttpRequest({ method, url, data });
-      console.log(response);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -440,7 +421,6 @@ const ChildCategory: React.FC = () => {
       }))
       listApiCall()
     } catch (error) {
-      console.log(error);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -463,7 +443,6 @@ const ChildCategory: React.FC = () => {
     }
     try {
       const response = await HttpRequest({ method, url, data});
-      console.log(response);
       setState((pre) => ({
         ...pre,
         showLoader: false,
@@ -474,7 +453,6 @@ const ChildCategory: React.FC = () => {
       }))
       listApiCall()
     } catch (error) {
-      console.log(error);
       setState((pre) => ({
         ...pre,
         showLoader: false,

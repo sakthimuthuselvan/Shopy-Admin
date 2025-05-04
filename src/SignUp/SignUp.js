@@ -60,7 +60,6 @@ function SignUp() {
                 phoneErr: true
             })
             document.getElementById("phone").focus()
-            console.log(phone.length);
         } else if (phone.length !== 10) {
             setState({
                 ...state,
@@ -68,7 +67,6 @@ function SignUp() {
                 errMsg: "phone number should be 10 digits"
             })
         } else if (!email) {
-            console.log(phone.length);
             setState({
                 ...state,
                 emailErr: true
@@ -109,7 +107,6 @@ function SignUp() {
         const response = HttpRequest({ method, url, data });
         response
             .then((res) => {
-                console.log(res);
                 setState({
                     ...state,
                     showLoader: false

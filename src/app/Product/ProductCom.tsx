@@ -186,26 +186,17 @@ const ProductCom: React.FC = () => {
       // Call the API only when uploadImgPath is not empty
       if (uploadImgPath && multipleImgPath.length > 0) {
         // two images updated
-        console.log("1111111");
-
         if (isEdit) {
           editAPiCall()
-          console.log("2222222");
-
         } else if (apicheck === 1) {
           // AddAPiCall();
-          console.log("333333");
 
         }
       } else {
         if (isEdit) {
-          console.log("4444444444");
-
           editAPiCall()
         } else if (apicheck === 1) {
           // AddAPiCall();
-          console.log("5555555555555");
-
         }
       }
 
@@ -467,8 +458,6 @@ const ProductCom: React.FC = () => {
       }))
       imageInput?.current?.focus()
     } else if (isCheck2 === true && multipleImages.length === 0) {
-      console.log(multipleImages);
-
       setState((pre) => ({
         ...pre,
         multipleImagesErr: true
@@ -482,26 +471,21 @@ const ProductCom: React.FC = () => {
       descriptionInput?.current?.focus()
     } else {
       if (isEdit) {
-        console.log("edit api call with single and multiple ");
         // both image api called
         if (isCheck1 && isCheck2) {
           await singleImageUploadApiCall()
           await multipleImgUploadApiCall()
         } else if (isCheck1) {
-          console.log("edit api call with single image chaged");
           // single image called
           await singleImageUploadApiCall()
         } else if (isCheck2) {
-          console.log("edit api call with multiple image chaged");
           // multiple image called
           await multipleImgUploadApiCall()
         } else {
           editAPiCall()
-          console.log("edit api call without image api call");
         }
         // edit api call
       } else if (isEdit === false && isCheck1 === true && isCheck2 === true) {
-        console.log("addAPi call with imag");
         // image upload and add api call
         setState((pre) => ({ ...pre, apicheck: 1 }))
         await singleImageUploadApiCall()
@@ -521,9 +505,7 @@ const ProductCom: React.FC = () => {
     const data: any = formData
     try {
       const response = await HttpRequest({ method, url, data });
-      const imageUrls = response.imageUrls ? response.imageUrls : [];
-      console.log("response ",response);
-      
+      const imageUrls = response.imageUrls ? response.imageUrls : [];      
       setState((pre) => ({
         ...pre,
         multipleImgPath: imageUrls.filter((item) => item),
@@ -855,7 +837,6 @@ const ProductCom: React.FC = () => {
       </div>
     )
   }
-  console.log(selectedItem.product_images);
 
   return (
     <div>
@@ -948,9 +929,7 @@ const ProductCom: React.FC = () => {
 
             <div className='d-flex'>
               {
-                selectedItem.product_images && selectedItem.product_images.length > 0 && selectedItem.product_images.map((item) => {
-                  console.log("itemitem ", item);
-    
+                selectedItem.product_images && selectedItem.product_images.length > 0 && selectedItem.product_images.map((item) => {    
                   return (
                     <div className='border p-2 mx-2 shadow rounded'>
                       <img src={item} alt='images' width={200} height={200} />

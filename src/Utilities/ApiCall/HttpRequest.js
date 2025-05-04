@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const baseUrl = process.env.REACT_APP_BASE_URL;
 
-console.log(baseUrl);
 
 const HttpRequest = async ({ method, url, data }) => {  
   try {
@@ -16,7 +15,7 @@ const HttpRequest = async ({ method, url, data }) => {
 
     const response = await axios({
       method,
-      url: `https://0p055xm8-4000.inc1.devtunnels.ms/${url}`,
+      url: `http://localhost:4000/${url}`,
       data: data, // Data can be either FormData, JSON, or any other valid format
       headers,
     });
