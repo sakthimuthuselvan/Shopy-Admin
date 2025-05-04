@@ -15,7 +15,7 @@ const HttpRequest = async ({ method, url, data }) => {
 
     const response = await axios({
       method,
-      url: `http://localhost:4000/${url}`,
+      url: `${baseUrl}${url}`,
       data: data, // Data can be either FormData, JSON, or any other valid format
       headers,
     });

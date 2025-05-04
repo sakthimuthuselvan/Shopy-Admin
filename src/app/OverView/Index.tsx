@@ -10,7 +10,6 @@ import HttpRequest from '../../Utilities/ApiCall/HttpRequest';
 import Loader from '../../Utilities/Loader/Loader';
 import MySnackbar from '../../AlertShow/Alert';
 
-
 const OrdersGraphCom = React.lazy(() => import("./OrdersGraph"));
 const ComparisonGraph = React.lazy(() => import("./ComparisonGraph"));
 
@@ -127,16 +126,21 @@ function Index() {
 
   const salesGraphDataFrame = (overall: any): void => {
     const groupData = groupByFun(overall);
+console.log("groupData ",groupData);
 
     const dates = Object.keys(groupData).map((date) => moment(date).format("ll"))
     const arr = Object.values(groupData).map((item: any) => {
-      return {
-        name: "Sales (INR)",
-        data: [item.reduce((pre, acc) => pre + (acc.amount || 0), 0)]
-      }
+      let num = item.reduce((pre, acc) => pre + (acc.amount || 0), 0)
+      return num
     })
+
+    const data = [{
+      name: "Sales (₹)",
+      data: arr
+  }]
+
     setGraphDates(dates)
-    setGraphSeries(arr)
+    setGraphSeries(data)
   }
 
   const groupByFun = (data: any): any => {
