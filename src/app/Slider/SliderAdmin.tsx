@@ -76,15 +76,15 @@ const SliderAdmin: React.FC = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Slider | null>(null);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [sliderList, setSliderList] = useState<Slider[]>([]);
-  const [submitDisabled, setSubmitDisabled] = useState(false);
+  // const [sliderList, setSliderList] = useState<Slider[]>([]);
+  // const [submitDisabled, setSubmitDisabled] = useState(false);
   const [categoryVal, setCategoryVal] = useState<Category | null>(null);
   const [categoryValErr, setCategoryValErr] = useState(false);
-  const [imagePath, setImagePath] = useState<string>("");
+  // const [imagePath, setImagePath] = useState<string>("");
   const [isCheck, setIsCheck] = useState<boolean>(false);
   const [imageVal, setImageVal] = useState<any>(null);
   const [imageValErr, setImageValErr] = useState<boolean>(false);
-  const [openImgDialog, setOpenImgDialog] = useState<boolean>(false);
+  // const [openImgDialog, setOpenImgDialog] = useState<boolean>(false);
   const [imageViewDialog, setImageViewDialog] = useState<boolean>(false);
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
 
@@ -114,7 +114,7 @@ const SliderAdmin: React.FC = () => {
 
       setCategoryList(() => {
         frameTableFun(slider_response.response_data, cate_response.response_data);
-        setSliderList(slider_response.response_data);
+        // setSliderList(slider_response.response_data);
         return cate_response.response_data
       });
 
@@ -134,7 +134,7 @@ const SliderAdmin: React.FC = () => {
   const frameTableFun = (sliders: Slider[], category_list: Category[]) => {
     const formattedData = sliders.map((item: any) => {
       return {
-        categoryImage: <img src={item.image} alt="Ad Image" width={80} height={80} />,
+        categoryImage: <img src={item.image} alt="Redundant" width={80} height={80} />,
         categoryVal: item.category && item.category.name ? item.category.name : "-",
         action: (
           <div>
@@ -163,7 +163,7 @@ const SliderAdmin: React.FC = () => {
     setOpenDialog(true);
     setCategoryVal(category);
     setIsEdit(true)
-    setImagePath(data.image)
+    // setImagePath(data.image)
     setIsCheck(false)
   };
 
@@ -264,7 +264,7 @@ const SliderAdmin: React.FC = () => {
     }))
     try {
       const response = await HttpRequest({ method, url, data });
-      setImagePath((pre) => {
+      // setImagePath((pre) => {
         if (isEdit === false) {
           addAPiCallFun(response.imageUrl)
         } else {
@@ -275,8 +275,8 @@ const SliderAdmin: React.FC = () => {
           ...pre,
           showLoader: false
         }))
-        return response.imageUrl
-      })
+      //   return response.imageUrl
+      // })
     } catch (error) {
       setAlertData((pre) => ({
         ...pre,
@@ -352,7 +352,7 @@ const SliderAdmin: React.FC = () => {
           </div> : null}
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" color="success" onClick={handleSubmit} disabled={submitDisabled}>
+          <Button variant="contained" color="success" onClick={handleSubmit}>
             Submit
           </Button>
         </DialogActions>

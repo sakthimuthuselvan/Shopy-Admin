@@ -377,7 +377,6 @@ const ChildCategory: React.FC = () => {
     const method: string = "POST";
     const url: string = "single/image/upload";
     const data: any = formData
-    const imageUpload: boolean = true
     try {
       const response = await HttpRequest({ method, url, data });
       setState((pre) => ({

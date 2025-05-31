@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef } from 'react'
+import React, { Suspense } from 'react'
 import SideBar from './SideBar/SideBar'
 import "./App.css"
 import "./custom.scss"
@@ -9,16 +9,13 @@ import NavBar2 from "./NavBar/Index";
 import SingIn from './SignIn/SingIn';
 import SignUp from './SignUp/SignUp';
 import RouteList from "./Routes/index"
-import { useSelector } from "react-redux";
 import OtpCom from './OtpCom/OtpCom';
 import ResetPassword from './ResetPssword/ResetPassword';
 import "./sakthi.scss"
 
 function App() {
   let size = WindowWidth()
-  const globalState = useSelector((state) => state);
   const isAuth = !!localStorage.getItem("_Auth")
-
   return (
     <div>
 

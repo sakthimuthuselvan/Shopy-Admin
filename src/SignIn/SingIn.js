@@ -130,9 +130,6 @@ function SignIn() {
         })
     }
 
-    const forgotPassFun = () => {
-        navigate("otp/valid")
-    }
     const size = WindowWidth()
     return (
         <div>

@@ -95,7 +95,7 @@ const {showPassword1,showPassword2,password,passwordErr,confirmPassword,confirmP
         };
       
         try {
-          const response = await HttpRequest({ method, url, data });
+           await HttpRequest({ method, url, data });
           setState({
             confirmPasswordErr: false,
             passwordErr: false

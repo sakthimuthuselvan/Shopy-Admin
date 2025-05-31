@@ -5,7 +5,6 @@ import { Provider } from "react-redux";
 import store from './Redux/Store';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { purple } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {

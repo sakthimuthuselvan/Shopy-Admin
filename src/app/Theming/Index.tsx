@@ -55,17 +55,6 @@ const Index: React.FC = () => {
   const getThemeResFun = (response) => {
     const data = response && response.response_data ? response.response_data : {};
     if (Object.keys(data).length > 0) {
-      //   {
-      //     "_id": "6730ecf141f54f16acf59fcd",
-      //     "company_name": "Shopy",
-      //     "fav_icon": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-      //     "font_family": "Poppins",
-      //     "primary": "#007bff",
-      //     "secondary": "#6c757d",
-      //     "success": "#28a745",
-      //     "last_update": "2024-11-10T17:27:13.430Z",
-      //     "__v": 0
-      // }
       setFormVal((pre) => ({
         ...pre,
         companyName: data.company_name,
@@ -101,20 +90,45 @@ const Index: React.FC = () => {
         openSnakbarMsg: "Secondary color is required"
       })
     } else {
-      formSubmitApiCall()
+      if (favIcon) {
+        imageUploadApiCall()
+      } else {
+        formSubmitApiCall("")
+      }
     }
   }
 
-  const formSubmitApiCall = () => {
-    const method: string = "GET";
-    const url: string = "category/get/parent/category";
+  const formSubmitApiCall = (url_val: string) => {
+    const method: string = "POST";
+    const url: string = "site-setting-api/update";
     const data: any = {
+      "company_name": companyName,
+      "fav_icon": url_val ?? favIconUrl,
       "font_family": fontVal,
       "primary": primaryVal,
       "secondary": secondaryVal,
       "success": successVal
     }
     axiosApiCallFun(method, url, data, "formSubmitReq")
+  }
+
+  const imageUploadApiCall = async (): Promise<void> => {
+    const formData = new FormData();
+    formData.append('image', favIcon);
+    // response.imageUrl
+    const method: string = "POST";
+    const url: string = "single/image/upload";
+    const data: any = formData
+    axiosApiCallFun(method, url, data, "ImgUploadApiReq")
+  }
+  
+
+  const imageUploadApiResFun = (response: any) => {
+    setFormVal((pre) => ({
+      ...pre,
+      favIconUrl: response.imageUrl ?? ""
+    }))
+    formSubmitApiCall(response.imageUrl)
   }
 
   const axiosApiCallFun = async (method: string, url: string, data: any, type: string): Promise<void> => {
@@ -126,6 +140,9 @@ const Index: React.FC = () => {
           break;
         case "getThemeReq":
           getThemeResFun(response)
+          break;
+        case "ImgUploadApiReq":
+          imageUploadApiResFun(response)
           break;
         default:
           break;
@@ -142,7 +159,7 @@ const Index: React.FC = () => {
   }
 
   const formSubmitResFun = (response) => {
-    const message = response.response_message ? response.response_message : "Something went wrong";
+    const message = response.response_message ? response.response_message : "Updated Successfully";
     setFormVal({
       ...formVal,
       openSnakbar: true,
@@ -270,7 +287,7 @@ const Index: React.FC = () => {
             />
           </div>
           {favIconUrl ? <div className='col-2 d-flex  justify-content-center'>
-            <img src={favIconUrl} width={50} height={50} />
+            <img src={favIconUrl} width={50} height={50} alt='Redundant' />
           </div> : null}
         </div>
         <div className='row mt-3'>

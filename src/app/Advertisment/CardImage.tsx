@@ -92,7 +92,7 @@ const CardImage: React.FC = () => {
   })
   const [checkAPiCall, setCheckApiCall] = useState(false)
 
-  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr, navigatePath, navigatePathErr, imageVal, isCheck, imageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, baseUrl, imageViewDialog, categoryVal, categoryValErr, categoryList } = state;
+  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr,  imageVal, isCheck,  submitDisable, deleteDialog, columnData, headerData, uploadImgPath, imageViewDialog, categoryVal, categoryValErr, categoryList } = state;
 
 
   useEffect(() => {

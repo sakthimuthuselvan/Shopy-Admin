@@ -11,7 +11,6 @@ import moment from "moment"
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import FeaturedVideoIcon from '@mui/icons-material/FeaturedVideo';
 import { base_url } from "../EnvImport/Index"
 interface state {
   showLoader: boolean;
@@ -65,7 +64,6 @@ const ProductCom: React.FC = () => {
   const baseurlPath: string = base_url;
 
   const parent = useRef<HTMLInputElement>(null);
-  const child = useRef<HTMLInputElement>(null);
   const productNameInput = useRef<HTMLInputElement>(null);
   const priceInput = useRef<HTMLInputElement>(null);
   const quantityInput = useRef<HTMLInputElement>(null);
@@ -169,7 +167,7 @@ const ProductCom: React.FC = () => {
     apicheck: 0 //add => 1
   })
 
-  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imgInputErr, navigatePath, navigatePathErr, imageVal, isCheck1, isCheck2, imageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, imageViewDialog, childCategoryList, parentCategoryList, parentVal, parentValErr, childVal, childValErr, description, productName, productNameErr, messure, messureErr, priceVal, priceValErr, totalQuantity, totalQuantityErr, multipleImagesErr, multipleImages, descriptionErr, multipleImgPath, imageViewType, apicheck } = state;
+  const { showLoader, openSnakbarType, openSnakbar, openSnakbarMsg, openDialog, isEdit, selectedItem, imageVal, isCheck1, isCheck2, imageValErr, submitDisable, deleteDialog, columnData, headerData, uploadImgPath, imageViewDialog, parentCategoryList, parentVal, parentValErr, description, productName, productNameErr, messure, messureErr, priceVal, priceValErr, totalQuantity, totalQuantityErr, multipleImagesErr, multipleImages, descriptionErr, multipleImgPath, imageViewType, apicheck } = state;
 
   useEffect(() => {
     parentCategoryAPiCall()
