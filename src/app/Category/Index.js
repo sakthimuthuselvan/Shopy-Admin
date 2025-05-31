@@ -373,7 +373,7 @@ const Index = () => {
             <Loader open={showLoader} />
 
             <div className='jr-card mt-0 d-flex justify-content-between align-items-center'>
-                <h3 className='font-weight-bold'>Category</h3>
+                <Typography variant='h5' className='fw-bold'>Category</Typography>
                 <Button variant="contained" size="small" className='bg-primary'
                     onClick={() => addBtnClickFun()}
                 >Add </Button>

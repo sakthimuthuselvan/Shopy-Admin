@@ -126,8 +126,6 @@ function Index() {
 
   const salesGraphDataFrame = (overall: any): void => {
     const groupData = groupByFun(overall);
-console.log("groupData ",groupData);
-
     const dates = Object.keys(groupData).map((date) => moment(date).format("ll"))
     const arr = Object.values(groupData).map((item: any) => {
       let num = item.reduce((pre, acc) => pre + (acc.amount || 0), 0)
@@ -157,6 +155,7 @@ console.log("groupData ",groupData);
 
     return arr;
   }
+  
   const columnData: any = recentList.map((item: any) => {
     let statusVal: null | ReactNode = null
     if (item.status === "Paid") {
@@ -165,8 +164,10 @@ console.log("groupData ",groupData);
       statusVal = <Chip size='small' label="Pending" variant='outlined' className='border bg-danger text-white px-2' />
 
     }
+
+    const order_user = item.shippingAddress?.firstName ?? "";
     return {
-      user_name: item.user && item.user.name ? item.user.name : "-",
+      user_name: order_user ? order_user : "-",
       amount: item.amount ? item.amount : "-",
       status: item.status ? statusVal : "-",
       created_at: item.createdAt ? moment(item.createdAt).format("ll") : "-"
@@ -174,6 +175,7 @@ console.log("groupData ",groupData);
   })
 
   const options = {
+    responsive:"scroll",
     filterType: 'checkbox',
     selectableRowsHeader: false,
     selectableRowsHideCheckboxes: false,

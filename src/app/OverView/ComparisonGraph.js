@@ -1,3 +1,4 @@
+import { colors } from "@mui/material";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
@@ -29,6 +30,7 @@ const ApexChart = ({ propData }) => {
           },
         },
       ],
+      colors:["#12b615","#f85712"]
     },
   };
 

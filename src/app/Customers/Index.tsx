@@ -96,6 +96,7 @@ const Index: React.FC = () => {
     })
 
     const options: any = {
+        responsive:"scroll",
         filterType: 'checkbox',
         selectableRowsHeader: false,
         selectableRowsHideCheckboxes: false,

@@ -102,7 +102,6 @@ const {showPassword1,showPassword2,password,passwordErr,confirmPassword,confirmP
           })
           navigate("/")
         } catch (error) {
-          console.log(error);
         }
       };
         

@@ -534,8 +534,6 @@ const ProductCom: React.FC = () => {
         ...pre,
         showLoader: false,
         uploadImgPath: response.imageUrl,
-        openSnakbar: true,
-        openSnakbarType: "success"
       }))
     } catch (error) {
       setState((pre) => ({

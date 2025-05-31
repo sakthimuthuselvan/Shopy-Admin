@@ -8,6 +8,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import MySnackbar from '../../AlertShow/Alert';
 import Loader from '../../Utilities/Loader/Loader';
 import { base_url } from '../EnvImport/Index';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 
 interface state {
@@ -52,11 +53,11 @@ const CardImage: React.FC = () => {
         size: 150,
         enableClickToCopy: false,
       },
-      // {
-      //   accessorKey: 'navigatePath', //access nested data with dot notation
-      //   header: 'Navigate Path',
-      //   size: 150,
-      // },
+      {
+        accessorKey: 'category_name', //access nested data with dot notation
+        header: 'Category Name',
+        size: 150,
+      },
       {
         accessorKey: 'action', //normal accessorKey
         header: 'Action',
@@ -105,7 +106,7 @@ const CardImage: React.FC = () => {
     const data: any = {}
     setState((pre) => ({ ...pre, showLoader: true }))
     try {
-      const response = await HttpRequest({ method, url, data });
+      const response = await HttpRequest({ method, url, data });      
       setState((pre) => ({ ...pre, showLoader: false, categoryList: response.response_data }))
 
     } catch (error) {
@@ -153,13 +154,12 @@ const CardImage: React.FC = () => {
 
 
 
-  const frameTableFun = (data: any): void => {
+  const frameTableFun = (data: any): void => {    
     // parentCategory,catgoryImage,childCategoryName,description,action
     const frameColumnData = data.map((item: any): any => {
-      let finded: any = categoryList.find((data) => data._id === item.navigate_category)
       let obj: any = {
         catgoryImage: <img src={item.image} alt='ad_image_card' width={80} height={80} />,
-        navigatePath: finded && finded.name ? finded.name : "-",
+        category_name: (item.navigate_category && item.navigate_category.name )?? "-",
         action: <div>
           <IconButton onClick={() => editBtnClick(item)}><EditIcon className='text-primary' /></IconButton>
           <IconButton onClick={() => deleteBtnClick(item)}> <DeleteIcon className='text-danger' /></IconButton>
@@ -175,6 +175,8 @@ const CardImage: React.FC = () => {
     }))
   }
   const editBtnClick = (data: any): void => {
+
+    const cate = categoryList.find((item)=> item._id === data.navigate_category._id)
     setState((pre) => ({
       ...pre,
       selectedItem: data,
@@ -182,6 +184,7 @@ const CardImage: React.FC = () => {
       isCheck: false,
       navigatePath: data.path,
       openDialog: true,
+      categoryVal: cate
     }))
   }
   const deleteBtnClick = (data: any): void => {
@@ -327,7 +330,7 @@ const CardImage: React.FC = () => {
     const url: string = `addvertisment/update/image/ads/${selectedItem._id}`;
     const data: any = {
       "image": uploadImgPath ? uploadImgPath : selectedItem.image,
-      "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category
+      "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category._id
     }
     setState((pre) => ({
       ...pre,
@@ -360,7 +363,7 @@ const CardImage: React.FC = () => {
     const url: string = "addvertisment/create/image/ads";
     const data: any = {
       "image": uploadImgPath,
-      "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category
+      "navigate_category": categoryVal._id ? categoryVal._id : selectedItem.navigate_category._id
     }
     setState((pre) => ({ ...pre, showLoader: true }))
     try {
@@ -483,9 +486,8 @@ const CardImage: React.FC = () => {
                 />
               </div>
             </div>
-
-            {isEdit ? <div className='col-2 d-flex align-items-center justify-content-center'>
-              <span onClick={() => viewImageDialog()}>view Image</span>
+            {isEdit ? <div className='col-2 d-flex align-items-end justify-content-center'>
+              <IconButton onClick={() => viewImageDialog()}><VisibilityIcon  className="text-primary"/></IconButton>
             </div> : null}
           </div>
         </DialogContent>

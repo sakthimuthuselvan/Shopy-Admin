@@ -6,12 +6,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useNavigate } from 'react-router-dom';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from '@mui/material';
 import SideBarList from "../SideBar/SidebarList";
 
 function Index() {
   const navigate = useNavigate()
-  const [companyName] = useState("Shopy")
+  const [companyName] = useState("Shopy Admin")
   const [state, setState] = useState({
     isClicked: false,
     sideBar: false,
@@ -86,7 +86,8 @@ function Index() {
       setState((pre) => ({
         ...pre,
         check: true,
-        selectedItem: item
+        selectedItem: item,
+        sideBar: item.moreOptions ? true : false
       }))
     }
 
@@ -112,7 +113,8 @@ function Index() {
   const childRouteNavigate = (data) => {
     setState((pre) => ({
       ...pre,
-      childSelected: data
+      childSelected: data,
+      sideBar: false
     }))
     navigate(data.path)
   }
@@ -164,7 +166,7 @@ function Index() {
               <div>
                 <div className='d-flex align-items-center'>
                   <IconButton onClick={sideBaropen}><MenuIcon sx={{ fontSize: 25 }} className='text-white pr-3' /></IconButton>
-                  <h3 className='text-white pl-4 pt-2' onClick={() => homeBtnClick()}>{companyName}</h3>
+                  <Typography variant='h6' className='text-white pl-4' onClick={() => homeBtnClick()}>{companyName}</Typography>
                 </div>
                 <div className={`${sideBar ? "sakthi" : ""}`}>
                   <div className={`slide-layer bg-primary text-white ${sideBar ? "sidebar-open" : ""}`}>

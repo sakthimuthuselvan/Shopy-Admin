@@ -1,7 +1,9 @@
-import { Button, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import MySnackbar from '../../AlertShow/Alert';
 import HttpRequest from '../../Utilities/ApiCall/HttpRequest';
+import { HexColorPicker } from "react-colorful";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 interface formVal {
   submitDisable: boolean;
@@ -17,6 +19,10 @@ interface formVal {
   openSnakbarMsg: string;
 }
 const Index: React.FC = () => {
+  const [openColorPicker, setOpenColorPicker] = useState<boolean>(false)
+  const [colorVal, setColorVal] = useState<string>("")
+  const [colorStateVal, setColorStateVal] = useState<string>("")
+
   const [formVal, setFormVal] = useState<formVal>({
     submitDisable: true,
     favIconUrl: "",
@@ -152,7 +158,7 @@ const Index: React.FC = () => {
       submitDisable: false
     })
   }
-  const handleChangeFile = (event) => {
+  const handleChangeFile = (event: any) => {
     const selectedFile = event.target.files[0];
     setFormVal((pre) => ({
       ...pre,
@@ -161,6 +167,59 @@ const Index: React.FC = () => {
     }))
 
   }
+
+  const openColorPickerFun = (type: string, val: string): void => {
+    setOpenColorPicker(true)
+    setColorStateVal(type)
+    setColorVal(val)
+  }
+
+  const colorPickerDialogBuild = () => {
+    return (
+      <Dialog
+        fullWidth
+        maxWidth={"xs"}
+        open={openColorPicker}
+      >
+        <DialogTitle className='border fs-15 bold border-primary text-white bg-primary d-flex justify-content-between align-items-center mb-3' >
+          Color Picker
+          <IconButton onClick={() => setOpenColorPicker(false)}><CancelIcon className='text-white' /></IconButton>
+        </DialogTitle>
+        <DialogContent className='d-flex justify-content-center'>
+          <HexColorPicker className='w-100' color={colorVal} onChange={(val) => setColorVal(val)} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => submitColorCodeFun()} variant='contained' color='success'>Submit</Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
+  const submitColorCodeFun = () => {
+    // primaryVal,secondaryVal,successVal
+    if (colorStateVal === "primaryVal") {
+      setFormVal((pre) => ({
+        ...pre,
+        primaryVal: colorVal,
+        submitDisable: false
+      }))
+    } else if (colorStateVal === "secondaryVal") {
+      setFormVal((pre) => ({
+        ...pre,
+        secondaryVal: colorVal,
+        submitDisable: false
+      }))
+    } else {
+      setFormVal((pre) => ({
+        ...pre,
+        successVal: colorVal,
+        submitDisable: false
+      }))
+    }
+    setOpenColorPicker(false)
+
+  }
+
   return (
     <div>
       <MySnackbar open={openSnakbar} type={openSnakbarType} variant={"filled"} message={openSnakbarMsg} duration={3000} handleClose={() => setFormVal((pre) => ({ ...pre, openSnakbar: false }))} />
@@ -226,7 +285,7 @@ const Index: React.FC = () => {
             />
           </div>
           <div className='col-2 row align-items-center justify-content-center'>
-            <div className='rounded' style={{ width: 50, height: 40, backgroundColor: primaryVal }}></div>
+            <div onClick={() => openColorPickerFun("primaryVal", primaryVal)} className='rounded' style={{ width: 50, height: 40, backgroundColor: primaryVal }}></div>
           </div>
         </div>
         <div className='row mt-3'>
@@ -241,7 +300,7 @@ const Index: React.FC = () => {
             />
           </div>
           <div className='col-2 row align-items-center justify-content-center'>
-            <div className='rounded' style={{ width: 50, height: 40, backgroundColor: secondaryVal }}></div>
+            <div onClick={() => openColorPickerFun("secondaryVal", secondaryVal)} className='rounded' style={{ width: 50, height: 40, backgroundColor: secondaryVal }}></div>
           </div>
         </div>
 
@@ -256,7 +315,7 @@ const Index: React.FC = () => {
             />
           </div>
           <div className='col-2 row align-items-center justify-content-center'>
-            <div className='rounded' style={{ width: 50, height: 40, backgroundColor: successVal }}></div>
+            <div onClick={() => openColorPickerFun("successVal", successVal)} className='rounded' style={{ width: 50, height: 40, backgroundColor: successVal }}></div>
           </div>
         </div>
 
@@ -269,6 +328,8 @@ const Index: React.FC = () => {
           >Submit</Button>
         </div>
       </div>
+
+      {openColorPicker && colorPickerDialogBuild()}
     </div>
   )
 }

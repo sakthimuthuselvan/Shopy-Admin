@@ -440,6 +440,7 @@ const SliderAdmin: React.FC = () => {
   }
 
   const options = {
+    responsive:"scroll",
     filterType: 'checkbox',
     selectableRowsHeader: false,
     selectableRowsHideCheckboxes: false,
@@ -468,7 +469,6 @@ const SliderAdmin: React.FC = () => {
         </Button>
       </div>
       <MUIDataTable
-        // title={"Recent Orders"}
         data={columnData}
         columns={headerData}
         options={options}

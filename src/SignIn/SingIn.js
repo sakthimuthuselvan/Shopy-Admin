@@ -190,9 +190,9 @@ function SignIn() {
                                             />
                                         </FormControl>
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <p className='text-start pt-4 text-info '><span className='pointer' onClick={() => forgotPassFun()}>Forgot Password</span></p>
-                                    </div>
+                                    </div> */}
                                     <div className='mt-4 py-3 mt-4'>
                                         <Button variant="contained"
                                             className='w-100 bg-primary mt-3 py-2'
