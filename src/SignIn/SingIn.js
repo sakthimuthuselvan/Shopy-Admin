@@ -96,9 +96,12 @@ function SignIn() {
 
         setState(prev => ({
             ...prev,
-            showLoader: false
+            showLoader: false,
+                openSnackbar: true,
+            snackType: "success",
+            snackMessage: response.response_message ?? "Login Successfully"
         }));
-
+        window.location.reload();
         const token = localStorage.getItem("_Auth");
         if (token) {
             dispatch({ type: "Auth" });
