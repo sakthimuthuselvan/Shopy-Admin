@@ -106,7 +106,7 @@ const Index: React.FC = () => {
     const url: string = "site-setting-api/update";
     const data: any = {
       "company_name": companyName,
-      "fav_icon": url_val ?? formVal.themeData.fav_icon,
+      "fav_icon": url_val ? url_val : formVal.themeData.fav_icon,
       "font_family": fontVal,
       "primary": primaryVal,
       "secondary": secondaryVal,
