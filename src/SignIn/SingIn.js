@@ -64,7 +64,7 @@ function SignIn() {
             }));
             document.getElementById("password").focus()
         } else {
-            if (!email === "sakthimsd531@gmail.com" && !password === "Sakthimsd531@") {
+            if (email !== "sakthimsd531@gmail.com" && password !== "Sakthimsd531@") {
                 setState((prev) => ({
                     ...prev,
                     passwordErr: true
@@ -77,45 +77,45 @@ function SignIn() {
 
 
 
-    const logInApiCall = () => {
-        setState({ ...state, showLoader: true })
-        const method = "Post";
-        const url = "shopy/user/login";
-        const data = {
-            "email": email,
-            "password": password
+   const logInApiCall = async () => {
+    setState(prev => ({ ...prev, showLoader: true }));
+
+    const method = "Post";
+    const url = "shopy/user/login";
+    const data = {
+        email: email,
+        password: password,
+        admin: 1
+    };
+
+    try {
+        const response = await HttpRequest({ method, url, data });
+        const isToken = response.data?.token || "";
+
+        localStorage.setItem("_Auth", isToken);
+
+        setState(prev => ({
+            ...prev,
+            showLoader: false
+        }));
+
+        const token = localStorage.getItem("_Auth");
+        if (token) {
+            dispatch({ type: "Auth" });
         }
-        // const encrypted = {
-        //     data: encrypt(JSON.stringify(data))
-        // }
 
-        const response = HttpRequest({ method, url, data });
-        response
-            .then((res) => {
-                const isToken = res.data && res.data.token ? res.data.token : ""
-                localStorage.setItem("_Auth", isToken)
-                setState({
-                    ...state,
-                    showLoader: false,
+        navigate("/");
 
-                })
-                const token = !!localStorage.getItem("_Auth")
-                if (token) {
-                    dispatch({ type: "Auth" })
-                }
-                navigate("/")
-
-            }).catch((err) => {
-
-                setState({
-                    ...state,
-                    showLoader: false,
-                    openSnackbar: true,
-                    snackType: "error",
-                    snackMessage: err.message
-                })
-            })
+    } catch (err) {
+        setState(prev => ({
+            ...prev,
+            showLoader: false,
+            openSnackbar: true,
+            snackType: "error",
+            snackMessage: err.message
+        }));
     }
+};
 
     // const goSignUp = () => {
     //     navigate("/signUp")
