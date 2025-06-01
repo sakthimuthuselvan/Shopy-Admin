@@ -17,6 +17,7 @@ interface formVal {
   openSnakbar: boolean;
   openSnakbarType: string;
   openSnakbarMsg: string;
+  themeData: any;
 }
 const Index: React.FC = () => {
   const [openColorPicker, setOpenColorPicker] = useState<boolean>(false)
@@ -34,7 +35,8 @@ const Index: React.FC = () => {
     successVal: "",
     openSnakbar: false,
     openSnakbarType: "",
-    openSnakbarMsg: ""
+    openSnakbarMsg: "",
+    themeData: {}
   })
 
   const { fontVal, primaryVal, secondaryVal, successVal, openSnakbarMsg, openSnakbar, openSnakbarType, companyName, favIcon, favIconUrl, submitDisable } = formVal;
@@ -63,6 +65,7 @@ const Index: React.FC = () => {
         primaryVal: data.primary,
         secondaryVal: data.secondary,
         successVal: data.success,
+        themeData:data
       }))
     }
 
@@ -103,7 +106,7 @@ const Index: React.FC = () => {
     const url: string = "site-setting-api/update";
     const data: any = {
       "company_name": companyName,
-      "fav_icon": url_val ?? favIconUrl,
+      "fav_icon": url_val ?? formVal.themeData.fav_icon,
       "font_family": fontVal,
       "primary": primaryVal,
       "secondary": secondaryVal,
